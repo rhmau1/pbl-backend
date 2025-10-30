@@ -5,6 +5,7 @@ use Firebase\JWT\Key;
 
 require_once __DIR__ . '/../../config/jwt.php';
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../helpers/ResponseFormatter.php';
 
 class Middleware
 {
@@ -13,9 +14,7 @@ class Middleware
         $headers = getallheaders();
 
         if (!isset($headers['Authorization'])) {
-            http_response_code(401);
-            echo json_encode(["message" => "Missing Authorization"]);
-            exit;
+            ResponseFormatter::error("Missing Authorization", 401);
         }
 
         $token = str_replace("Bearer ", "", $headers['Authorization']);
@@ -25,11 +24,12 @@ class Middleware
 
         try {
             $decoded = JWT::decode($token, new Key($secret, 'HS256'));
+
             return (array)$decoded->user;
-        } catch (Exception $e) {
-            http_response_code(401);
-            echo json_encode(["message" => "Invalid token"]);
-            exit;
+        } catch (\Firebase\JWT\ExpiredException $e) {
+            ResponseFormatter::error("Token expired", 401);
+        } catch (\Exception $e) {
+            ResponseFormatter::error("Invalid token", 401);
         }
     }
 }
