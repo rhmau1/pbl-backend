@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: pbl-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pbl_db
+      POSTGRES_USER: pbl_user
+      POSTGRES_PASSWORD: pbl_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: pbl-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+volumes:
+  dbdata:
