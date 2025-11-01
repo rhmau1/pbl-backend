@@ -46,11 +46,29 @@ final class Router
         foreach ($this->routes[$req->method] ?? [] as $route) {
             $params = $route->match($req->path);
             if ($params !== null) {
-                return $route->run($req, $res, $params);
+
+                $core = function (Request $rq) use ($route, $res, $params): Response {
+                    return $route->run($rq, $res, $params);
+                };
+
+                $next = $core;
+                $middlewares = array_reverse($route->getMiddlewares());
+                foreach ($middlewares as $mw) {
+                    $next = function (Request $rq) use ($mw, $next): Response {
+                        return $mw->process($rq, $next);
+                    };
+                }
+
+                return $next($req);
             }
         }
-        return $res->json(['ok' => false, 'error' => ['code' => 'NOT_FOUND', 'message' => 'Route not found']], 404);
+
+        return $res->json(
+            ['ok' => false, 'error' => ['code' => 'NOT_FOUND', 'message' => 'Route not found']],
+            404
+        );
     }
+
 
 
 }
@@ -67,6 +85,11 @@ final class Route
     {
         $this->middlewares[] = $m;
         return $this;
+    }
+
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 
     public function match(string $path): ?array
