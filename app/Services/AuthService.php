@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use Firebase\JWT\JWT;
@@ -53,6 +54,7 @@ final class AuthService
         }
 
         $token = $this->issueToken($u->id);
+        $this->repo->updateLastLogin($u->id);
 
         return [
             true,
@@ -62,16 +64,18 @@ final class AuthService
                     'id' => $u->id,
                     'email' => $u->email,
                     'name' => $u->name,
+                    'role' => $u->role,
+                    'lastLoginAt' => $u->lastLoginAt,
                 ],
             ],
         ];
     }
 
-    public function register(string $email, string $name, string $password): array
+    public function register(string $email, string $name, string $password, string $role): array
     {
         if ($this->repo->findByEmail($email))
             return [false, 'Email already registered'];
-        $id = $this->repo->create($email, $name, password_hash($password, PASSWORD_BCRYPT));
-        return [true, ['id' => $id, 'name' => $name, 'email' => $email]];
+        $id = $this->repo->create($email, $name, password_hash($password, PASSWORD_BCRYPT), $role);
+        return [true, ['id' => $id, 'name' => $name, 'email' => $email, 'role' => $role]];
     }
 }

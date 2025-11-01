@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Models;
+
+use DateTime;
 
 final class User
 {
@@ -8,8 +11,10 @@ final class User
         public string $email,
         public string $name,
         public string $passwordHash,
+        public string $role,
+        public int $twoFAEnabled,
+        public ?string $lastLoginAt,
         public string $createdAt,
         public string $updatedAt
-    ) {
-    }
+    ) {}
 }

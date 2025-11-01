@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controllers;
@@ -22,10 +23,12 @@ final class AuthController extends Controller
         $email = (string)($req->json['email'] ?? '');
         $name  = (string)($req->json['name'] ?? '');
         $pass  = (string)($req->json['password'] ?? '');
+        $role  = (string)($req->json['role'] ?? '');
 
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Invalid email';
         if ($name === '')                               $errors['name']  = 'Name required';
+        if ($role === '')                               $errors['role']  = 'role required';
         if (strlen($pass) < 6)                          $errors['password'] = 'Min 6 chars';
 
         if ($errors) {
@@ -35,10 +38,10 @@ final class AuthController extends Controller
             );
         }
 
-        [$ok, $user] = $this->auth->register($email, $name, $pass);
+        [$ok, $user] = $this->auth->register($email, $name, $pass, $role);
         if (!$ok) {
             return $res->json(
-                ResponseFormatter::error('Register failed', 400),
+                ResponseFormatter::error($user, 400),
                 400
             );
         }
@@ -79,6 +82,8 @@ final class AuthController extends Controller
                 'id'    => $out['user']['id'],
                 'name'  => $out['user']['name'],
                 'email' => $out['user']['email'],
+                'role' => $out['user']['role'],
+                'lastLoginAt' => $out['user']['lastLoginAt'],
             ],
         ];
 

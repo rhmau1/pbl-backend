@@ -17,10 +17,16 @@ final class UserRepository
 
     public function findByEmail(string $email): ?User
     {
-        $st = $this->db->prepare('SELECT * FROM users WHERE email = :e LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(:e) LIMIT 1');
         $st->execute(['e' => $email]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->map($row) : null;
+    }
+
+    public function updateLastLogin(int $id): bool
+    {
+        $st = $this->db->prepare('UPDATE users SET last_login_at=NOW() WHERE id=:id');
+        return $st->execute(['id' => $id]);
     }
 
     public function findById(int $id): ?User
@@ -45,10 +51,10 @@ final class UserRepository
         return (int) $this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
     }
 
-    public function create(string $email, string $name, string $passwordHash): int
+    public function create(string $email, string $name, string $passwordHash, string $role): int
     {
-        $st = $this->db->prepare('INSERT INTO users(email,name,password_hash) VALUES(:e,:n,:p) RETURNING id');
-        $st->execute(['e' => $email, 'n' => $name, 'p' => $passwordHash]);
+        $st = $this->db->prepare('INSERT INTO users(email,name,password_hash,role) VALUES(:e,:n,:p,:r) RETURNING id');
+        $st->execute(['e' => $email, 'n' => $name, 'p' => $passwordHash, 'r' => $role]);
         return (int) $st->fetchColumn();
     }
 
@@ -78,6 +84,9 @@ final class UserRepository
             $r['email'],
             $r['name'],
             $r['password_hash'],
+            $r['role'],
+            $r['two_fa_enabled'],
+            $r['last_login_at'],
             $r['created_at'],
             $r['updated_at']
         );
