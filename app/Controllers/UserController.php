@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Request;
+use App\Core\Response;
 use App\Helpers\ResponseFormatter;
 use App\Requests\UserUpdateRequest;
 use App\Services\UserService;
@@ -14,58 +16,81 @@ final class UserController extends Controller
         $this->svc ??= new UserService();
     }
 
-    public function list(Request $req)
+    public function list(Request $req, Response $res): Response
     {
-        $page  = (int)($req->query['page'] ?? 1);
-        $limit = (int)($req->query['limit'] ?? 20);
+        $page = (int) ($req->query['page'] ?? 1);
+        $limit = (int) ($req->query['limit'] ?? 20);
 
-        [$data, $meta] = $this->svc->paginate($page, $limit);
+        [$items, $meta] = $this->svc->paginate($page, $limit);
 
-        ResponseFormatter::success("Success", [
-            "items" => $data,
-            "meta"  => $meta
-        ]);
+        return $res->json(
+            ResponseFormatter::success('Success', [
+                'items' => $items,
+                'meta' => $meta,
+            ], 200),
+            200
+        );
     }
 
-    public function get(Request $req, $res, array $params)
+    public function get(Request $req, Response $res, array $params): Response
     {
-        $id = (int)($params['id'] ?? 0);
-        $u  = $this->svc->get($id);
+        $id = (int) ($params['id'] ?? 0);
+        $u = $this->svc->get($id);
 
         if (!$u) {
-            ResponseFormatter::error("User not found", 404);
+            return $res->json(
+                ResponseFormatter::error('User not found', 404),
+                404
+            );
         }
 
-        ResponseFormatter::success("Success", $u);
+        return $res->json(
+            ResponseFormatter::success('Success', $u, 200),
+            200
+        );
     }
 
-    public function update(Request $req, $res, array $params)
+    public function update(Request $req, Response $res, array $params): Response
     {
-        $id = (int)($params['id'] ?? 0);
+        $id = (int) ($params['id'] ?? 0);
 
         [$valid, $errors, $payload] = UserUpdateRequest::validate($req->json);
         if (!$valid) {
-            ResponseFormatter::error("Validation error", 422, $errors);
+            return $res->json(
+                ResponseFormatter::error('Validation error', 422, $errors),
+                422
+            );
         }
 
         $ok = $this->svc->update($id, $payload);
-
         if (!$ok) {
-            ResponseFormatter::error("Cannot update", 400);
+            return $res->json(
+                ResponseFormatter::error('Cannot update', 400),
+                400
+            );
         }
 
-        ResponseFormatter::success("Success", ["id" => $id]);
+        return $res->json(
+            ResponseFormatter::success('Success', ['id' => $id], 200),
+            200
+        );
     }
 
-    public function delete(Request $req, $res, array $params)
+    public function delete(Request $req, Response $res, array $params): Response
     {
-        $id = (int)($params['id'] ?? 0);
+        $id = (int) ($params['id'] ?? 0);
         $ok = $this->svc->delete($id);
 
         if (!$ok) {
-            ResponseFormatter::error("Cannot delete", 400);
+            return $res->json(
+                ResponseFormatter::error('Cannot delete', 400),
+                400
+            );
         }
 
-        ResponseFormatter::success("Success", ["id" => $id]);
+        return $res->json(
+            ResponseFormatter::success('Success', ['id' => $id], 200),
+            200
+        );
     }
 }
