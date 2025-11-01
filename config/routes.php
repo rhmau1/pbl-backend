@@ -4,6 +4,7 @@ use App\Core\Router;
 use App\Middlewares\AuthMiddleware;
 use App\Controllers\UserController;
 use App\Controllers\AuthController;
+use App\Controllers\CategoryController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -19,5 +20,11 @@ return function (Router $r) {
     $api->put('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
+
+    $api->post('/categories', [CategoryController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/categories', [CategoryController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/categories/{id}', [CategoryController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/categories/{id}', [CategoryController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/categories/{id}', [CategoryController::class, 'delete'])->middleware(new AuthMiddleware());
   });
 };
