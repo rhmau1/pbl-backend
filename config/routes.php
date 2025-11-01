@@ -1,4 +1,5 @@
 <?php
+
 use App\Core\Router;
 use App\Middlewares\AuthMiddleware;
 use App\Controllers\UserController;
@@ -17,6 +18,6 @@ return function (Router $r) {
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
+    $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
   });
 };
-

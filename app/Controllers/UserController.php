@@ -93,4 +93,28 @@ final class UserController extends Controller
             200
         );
     }
+
+    public function logout(Request $req, Response $res): Response
+    {
+        $user = $req->getAttribute('user', null);
+
+        if (!$user || empty($user['id'])) {
+            return $res->json(
+                ResponseFormatter::error('Invalid user', 401),
+                401
+            );
+        }
+
+        $u = $this->svc->get($user['id']);
+        if (!$u) {
+            return $res->json(
+                ResponseFormatter::error('User not found', 404),
+                404
+            );
+        }
+        return $res->json(
+            ResponseFormatter::success('Logged out successfully', ['id' => $user['id']], 200),
+            200
+        );
+    }
 }
