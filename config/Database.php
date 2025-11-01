@@ -1,38 +1,32 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace Config;
 
-use Dotenv\Dotenv;
+use PDO;
 
-class Database
-{
-    private $host;
-    private $db_name;
-    private $username;
-    private $password;
-    private $port;
+final class Database {
+    private static ?PDO $pdo = null;
 
-    public function __construct()
-    {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
-        $dotenv->load();
+    public static function pdo(): PDO {
+        if (self::$pdo) return self::$pdo;
 
-        $this->host = $_ENV['DB_HOST'];
-        $this->db_name = $_ENV['DB_NAME'];
-        $this->username = $_ENV['DB_USER'];
-        $this->password = $_ENV['DB_PASS'];
-        $this->port = $_ENV['DB_PORT'];
-    }
+        $driver = $_ENV['DB_DRIVER'] ?? 'pgsql';
+        $host   = $_ENV['DB_HOST'] ?? '127.0.0.1';
+        $port   = $_ENV['DB_PORT'] ?? 5432;
+        $db     = $_ENV['DB_NAME'] ?? 'pbl_db';
+        $user   = $_ENV['DB_USER'] ?? 'pbl_user';
+        $pass   = $_ENV['DB_PASS'] ?? 'pbl_pass';
 
-    public function getConnection()
-    {
-        $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->db_name}";
-        try {
-            $conn = new PDO($dsn, $this->username, $this->password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $conn;
-        } catch (PDOException $e) {
-            echo json_encode(['error' => 'Connection Error: ' . $e->getMessage()]);
-            exit;
+        if ($driver === 'pgsql') {
+            $dsn = "pgsql:host={$host};port={$port};dbname={$db}";
+        } else {
+            $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
         }
+
+        self::$pdo = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+
+        return self::$pdo;
     }
 }
