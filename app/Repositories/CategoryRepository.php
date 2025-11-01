@@ -45,7 +45,7 @@ final class CategoryRepository
 
     public function create(string $name, string $type): int
     {
-        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($name)));
+        $slug = $this->slugify($name);
         $st = $this->db->prepare('INSERT INTO categories(name,slug,type) VALUES(:n,:s,:t) RETURNING id');
         $st->execute(['n' => $name, 's' => $slug, 't' => $type]);
         return (int) $st->fetchColumn();
@@ -53,16 +53,30 @@ final class CategoryRepository
 
     public function update(int $id, array $fields): bool
     {
+        if (isset($fields['name'])) {
+            $fields['slug'] = $this->slugify($fields['name']);
+        }
+
         $set = [];
         $params = ['id' => $id];
+
         foreach ($fields as $k => $v) {
             $set[] = "$k = :$k";
             $params[$k] = $v;
         }
-        $sql = 'UPDATE categories SET ' . implode(',', $set) . ', WHERE id=:id';
+
+        $sql = 'UPDATE categories SET ' . implode(',', $set) . ' WHERE id=:id';
         $st = $this->db->prepare($sql);
         return $st->execute($params);
     }
+
+    private function slugify(string $text): string
+    {
+        $text = strtolower(trim($text));
+        $text = preg_replace('/[^a-z0-9]+/', '-', $text);
+        return trim($text, '-');
+    }
+
 
     public function delete(int $id): bool
     {

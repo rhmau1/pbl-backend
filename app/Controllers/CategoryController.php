@@ -54,7 +54,9 @@ final class CategoryController extends Controller
     {
         $id = (int) ($params['id'] ?? 0);
 
-        [$valid, $errors, $payload] = CategoryUpdateRequest::validate($req->json);
+        $input = $req->json ?: $_POST;
+
+        [$valid, $errors, $payload] = CategoryUpdateRequest::validate($input);
         if (!$valid) {
             return $res->json(
                 ResponseFormatter::error('Validation error', 422, $errors),

@@ -11,11 +11,11 @@ final class CategoryUpdateRequest
 
         $errors = [];
 
-        if ($name === null || $name === '')
-            $errors['name'] = 'Name is required';
+        if ($name !== null && $name === '')
+            $errors['name'] = 'Name required if provided';
 
-        if ($type === null || $type === '')
-            $errors['type'] = 'Type is required';
+        if ($type !== null && $type === '')
+            $errors['type'] = 'Type required if provided';
 
         return [
             $errors === [],
