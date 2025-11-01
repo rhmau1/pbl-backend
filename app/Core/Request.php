@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 final class Request
@@ -10,8 +11,7 @@ final class Request
         public readonly array $headers,
         public readonly array $query,
         public readonly array $json
-    ) {
-    }
+    ) {}
 
     public function withAttribute(string $key, mixed $value): self
     {
@@ -35,7 +35,14 @@ final class Request
 
         $raw = file_get_contents('php://input') ?: '';
         $type = $_SERVER['CONTENT_TYPE'] ?? '';
-        $json = str_starts_with($type, 'application/json') ? (json_decode($raw, true) ?: []) : $_POST;
+
+        if (str_starts_with($type, 'application/json')) {
+            $json = json_decode($raw, true) ?: [];
+        } elseif (str_starts_with($type, 'application/x-www-form-urlencoded')) {
+            parse_str($raw, $json);
+        } else {
+            $json = $_POST;
+        }
 
         return new self($method, $path, $headers, $query, $json);
     }
