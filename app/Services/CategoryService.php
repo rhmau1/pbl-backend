@@ -85,6 +85,9 @@ final class CategoryService
 
     public function delete(int $id): bool
     {
+        $u = $this->repo->findById($id);
+        if (!$u)
+            return false;
         return $this->repo->delete($id);
     }
 }
