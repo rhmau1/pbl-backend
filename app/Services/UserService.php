@@ -15,15 +15,41 @@ final class UserService
         $page = max(1, $page);
         $limit = min(100, max(1, $limit));
         $offset = ($page - 1) * $limit;
+
         $data = $this->repo->list($limit, $offset);
         $total = $this->repo->count();
-        return [$data, ['page' => $page, 'limit' => $limit, 'total' => $total]];
+
+        $data = array_map(function ($u) {
+            if (is_object($u)) {
+                $u = (array) $u;
+            }
+            unset($u['passwordHash'], $u['password_hash']);
+            return $u;
+        }, $data);
+
+        return [
+            $data,
+            [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $total
+            ]
+        ];
     }
 
     public function get(int $id): ?array
     {
         $u = $this->repo->findById($id);
-        return $u ? ['id' => $u->id, 'email' => $u->email, 'name' => $u->name, 'created_at' => $u->createdAt] : null;
+        if (!$u)
+            return null;
+
+        return [
+            'id' => $u->id,
+            'email' => $u->email,
+            'name' => $u->name,
+            'created_at' => $u->createdAt,
+            'updated_at' => $u->updatedAt ?? null,
+        ];
     }
 
     public function update(int $id, array $payload): bool
