@@ -15,7 +15,7 @@ final class AuthService
         $this->roleRepo ??= new RoleRepository();
     }
 
-    public function issueToken(int $userId): string
+    public function issueToken(int $userId, int $roleId): string
     {
         $cfg = require __DIR__ . '/../../config/jwt.php';
 
@@ -29,6 +29,7 @@ final class AuthService
             'exp' => $now + ($cfg['ttl'] ?? 3600),
             'user' => [
                 'id' => $userId,
+                'role_id' => $roleId
             ],
         ];
 
@@ -55,7 +56,7 @@ final class AuthService
             return [false, 'Invalid credentials'];
         }
 
-        $token = $this->issueToken($u->id);
+        $token = $this->issueToken($u->id, $u->roleId);
         $this->repo->updateLastLogin($u->id);
 
         return [
