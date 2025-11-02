@@ -46,24 +46,40 @@ final class Router
 
     public function dispatch(Request $req, Response $res): Response
     {
-        foreach ($this->routes[$req->method] ?? [] as $route) {
-            $params = $route->match($req->path);
-            if ($params !== null) {
+        $pathMatched = false;
 
-                $core = function (Request $rq) use ($route, $res, $params): Response {
-                    return $route->run($rq, $res, $params);
-                };
+        foreach ($this->routes as $method => $routes) {
+            foreach ($routes as $route) {
+                $params = $route->match($req->path);
 
-                $next = $core;
-                $middlewares = array_reverse($route->getMiddlewares());
-                foreach ($middlewares as $mw) {
-                    $next = function (Request $rq) use ($mw, $next): Response {
-                        return $mw->process($rq, $next);
+                if ($params !== null) {
+                    if ($method !== $req->method) {
+                        $pathMatched = true;
+                        continue;
+                    }
+
+                    $core = function (Request $rq) use ($route, $res, $params): Response {
+                        return $route->run($rq, $res, $params);
                     };
-                }
 
-                return $next($req);
+                    $next = $core;
+                    $middlewares = array_reverse($route->getMiddlewares());
+                    foreach ($middlewares as $mw) {
+                        $next = function (Request $rq) use ($mw, $next): Response {
+                            return $mw->process($rq, $next);
+                        };
+                    }
+
+                    return $next($req);
+                }
             }
+        }
+
+        if ($pathMatched) {
+            return $res->json(
+                ResponseFormatter::error('Method not allowed', 405),
+                405
+            );
         }
 
         return $res->json(
