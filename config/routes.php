@@ -6,6 +6,7 @@ use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
 use App\Controllers\RoleController;
+use App\Controllers\RolePermissionController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -33,5 +34,11 @@ return function (Router $r) {
     $api->get('/roles/{id}', [RoleController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/roles/{id}', [RoleController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/roles/{id}', [RoleController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/role-permissions', [RolePermissionController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/role-permissions', [RolePermissionController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/role-permissions/{id}', [RolePermissionController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/role-permissions/{id}', [RolePermissionController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/role-permissions/{id}', [RolePermissionController::class, 'delete'])->middleware(new AuthMiddleware());
   });
 };
