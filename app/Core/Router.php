@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Core;
+
+use App\Helpers\ResponseFormatter;
 
 final class Router
 {
@@ -64,22 +67,17 @@ final class Router
         }
 
         return $res->json(
-            ['ok' => false, 'error' => ['code' => 'NOT_FOUND', 'message' => 'Route not found']],
+            ResponseFormatter::error('Route not found', 404),
             404
         );
     }
-
-
-
 }
 
 final class Route
 {
     private array $middlewares = [];
 
-    public function __construct(private string $method, private string $pattern, private $handler)
-    {
-    }
+    public function __construct(private string $method, private string $pattern, private $handler) {}
 
     public function middleware($m): self
     {
@@ -116,6 +114,4 @@ final class Route
 
         return $handler($req, $res);
     }
-
-
 }
