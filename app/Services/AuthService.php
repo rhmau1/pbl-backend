@@ -2,15 +2,17 @@
 
 namespace App\Services;
 
+use App\Repositories\RoleRepository;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Repositories\UserRepository;
 
 final class AuthService
 {
-    public function __construct(private ?UserRepository $repo = null)
+    public function __construct(private ?UserRepository $repo = null, private ?RoleRepository $roleRepo = null)
     {
         $this->repo ??= new UserRepository();
+        $this->roleRepo ??= new RoleRepository();
     }
 
     public function issueToken(int $userId): string
@@ -64,18 +66,22 @@ final class AuthService
                     'id' => $u->id,
                     'email' => $u->email,
                     'name' => $u->name,
-                    'role' => $u->role,
-                    'lastLoginAt' => $u->lastLoginAt,
+                    'role_id' => $u->roleId,
+                    'last_login_at' => $u->lastLoginAt,
                 ],
             ],
         ];
     }
 
-    public function register(string $email, string $name, string $password, string $role): array
+    public function register(string $email, string $name, string $password, string $roleId): array
     {
         if ($this->repo->findByEmail($email))
             return [false, 'Email already registered'];
-        $id = $this->repo->create($email, $name, password_hash($password, PASSWORD_BCRYPT), $role);
-        return [true, ['id' => $id, 'name' => $name, 'email' => $email, 'role' => $role]];
+        $role = $this->roleRepo->findById($roleId);
+        if (!$role) {
+            return [false, 'Role ID not found'];
+        }
+        $id = $this->repo->create($email, $name, password_hash($password, PASSWORD_BCRYPT), $roleId);
+        return [true, ['id' => $id, 'name' => $name, 'email' => $email, 'role_id' => $roleId]];
     }
 }

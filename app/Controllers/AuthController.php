@@ -82,8 +82,8 @@ final class AuthController extends Controller
                 'id'    => $out['user']['id'],
                 'name'  => $out['user']['name'],
                 'email' => $out['user']['email'],
-                'role' => $out['user']['role'],
-                'lastLoginAt' => $out['user']['lastLoginAt'],
+                'role_id' => $out['user']['role_id'],
+                'last_login_id' => $out['user']['last_login_at'],
             ],
         ];
 

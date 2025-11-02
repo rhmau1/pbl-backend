@@ -48,6 +48,7 @@ final class UserService
             'id' => $u->id,
             'email' => $u->email,
             'name' => $u->name,
+            'role_id' => $u->roleId,
             'created_at' => $u->createdAt,
             'updated_at' => $u->updatedAt ?? null,
         ];

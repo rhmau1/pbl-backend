@@ -51,10 +51,10 @@ final class UserRepository
         return (int) $this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
     }
 
-    public function create(string $email, string $name, string $passwordHash, string $role): int
+    public function create(string $email, string $name, string $passwordHash, string $roleId): int
     {
-        $st = $this->db->prepare('INSERT INTO users(email,name,password_hash,role) VALUES(:e,:n,:p,:r) RETURNING id');
-        $st->execute(['e' => $email, 'n' => $name, 'p' => $passwordHash, 'r' => $role]);
+        $st = $this->db->prepare('INSERT INTO users(email,name,password_hash,role_id) VALUES(:e,:n,:p,:r) RETURNING id');
+        $st->execute(['e' => $email, 'n' => $name, 'p' => $passwordHash, 'r' => $roleId]);
         return (int) $st->fetchColumn();
     }
 
@@ -84,7 +84,7 @@ final class UserRepository
             $r['email'],
             $r['name'],
             $r['password_hash'],
-            $r['role'],
+            $r['role_id'],
             $r['two_fa_enabled'],
             $r['last_login_at'],
             $r['created_at'],

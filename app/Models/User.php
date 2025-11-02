@@ -11,7 +11,7 @@ final class User
         public string $email,
         public string $name,
         public string $passwordHash,
-        public string $role,
+        public int $roleId,
         public int $twoFAEnabled,
         public ?string $lastLoginAt,
         public string $createdAt,
