@@ -74,12 +74,15 @@ final class CategoryService
     public function update(int $id, array $payload): bool
     {
         $fields = [];
-        if (isset($payload['name']))
+        if (isset($payload['name']) && trim($payload['name']) !== '')
             $fields['name'] = (string) $payload['name'];
-        if (isset($payload['type']))
+        if (isset($payload['type']) && trim($payload['type']) !== '')
             $fields['type'] = (string) $payload['type'];
         if (!$fields)
-            return true;
+            return false;
+        $u = $this->repo->findById($id);
+        if (!$u)
+            return false;
         return $this->repo->update($id, $fields);
     }
 
