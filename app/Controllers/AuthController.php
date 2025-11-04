@@ -71,8 +71,8 @@ final class AuthController extends Controller
         [$ok, $out] = $this->auth->login($payload['email'], $payload['password']);
         if (!$ok) {
             return $res->json(
-                ResponseFormatter::error('Wrong email/password', 401),
-                401
+                ResponseFormatter::error('Wrong email/password', 400),
+                400
             );
         }
 
