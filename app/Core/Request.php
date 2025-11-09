@@ -54,4 +54,11 @@ final class Request
                 return $v;
         return $default;
     }
+
+    public function schemeAndHost(): string
+    {
+        $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $scheme . '://' . $host;
+    }
 }
