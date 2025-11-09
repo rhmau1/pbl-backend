@@ -5,6 +5,7 @@ use App\Middlewares\AuthMiddleware;
 use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
+use App\Controllers\MediaAssetController;
 use App\Controllers\RoleController;
 use App\Controllers\RolePermissionController;
 
@@ -20,6 +21,7 @@ return function (Router $r) {
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/users/profile/{id}', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
 
@@ -40,5 +42,11 @@ return function (Router $r) {
     $api->get('/role-permissions/{id}', [RolePermissionController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/role-permissions/{id}', [RolePermissionController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/role-permissions/{id}', [RolePermissionController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/media', [MediaAssetController::class, 'upload']);
+    $api->get('/media', [MediaAssetController::class, 'list']);
+    $api->get('/media/{id}', [MediaAssetController::class, 'detail']);
+    $api->put('/media/{id}', [MediaAssetController::class, 'updateVisibility']);
+    $api->delete('/media/{id}', [MediaAssetController::class, 'delete']);
   });
 };
