@@ -66,6 +66,51 @@ final class UserService
         return $this->repo->update($id, $fields);
     }
 
+    public function updateProfile(int $id, array $payload): array
+    {
+        $u = $this->repo->findById($id);
+        if (!$u) {
+            return [false, 'User not found'];
+        }
+
+        if (isset($payload['skills'])) {
+            $payload['skills'] = json_encode($payload['skills']);
+        }
+
+        if (isset($payload['socials'])) {
+            $payload['socials'] = json_encode($payload['socials']);
+        }
+
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+
+            $folder = "public/avatars/";
+            if (!file_exists($folder))
+                mkdir($folder, 0777, true);
+
+            $hash = md5_file($_FILES['avatar']['tmp_name']);
+            $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
+            $filename = $hash . "." . strtolower($ext);
+            $targetPath = $folder . $filename;
+
+            // Reuse if exists
+            if (!file_exists($targetPath)) {
+                move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath);
+            }
+
+            $payload['avatar'] = 'uploads/avatars/' . $filename;
+        }
+
+        $success = $this->repo->updateProfile($id, $payload);
+
+        if (!$success) {
+            return [false, 'Update failed'];
+        }
+
+        $updated = $this->repo->findById($id);
+
+        return [true, $updated];
+    }
+
     public function delete(int $id): bool
     {
         return $this->repo->delete($id);

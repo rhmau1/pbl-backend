@@ -29,6 +29,24 @@ final class UserRepository
         return $st->execute(['id' => $id]);
     }
 
+    public function updateProfile(int $id, array $fields): bool
+    {
+        $set = [];
+        $params = ['id' => $id];
+
+        foreach ($fields as $k => $v) {
+            $set[] = "$k = :$k";
+            $params[$k] = $v;
+        }
+
+        $set[] = "updated_at = NOW()";
+
+        $sql = 'UPDATE users SET ' . implode(', ', $set) . ' WHERE id = :id';
+        $st  = $this->db->prepare($sql);
+
+        return $st->execute($params);
+    }
+
     public function findById(int $id): ?User
     {
         $st = $this->db->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
@@ -88,7 +106,10 @@ final class UserRepository
             $r['two_fa_enabled'],
             $r['last_login_at'],
             $r['created_at'],
-            $r['updated_at']
+            $r['updated_at'],
+            json_decode($r['skills'] ?? '[]', true),
+            json_decode($r['socials'] ?? '{}', true),
+            $r['avatar']
         );
     }
 }

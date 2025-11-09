@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
-
 final class User
 {
     public function __construct(
@@ -15,6 +13,9 @@ final class User
         public int $twoFAEnabled,
         public ?string $lastLoginAt,
         public string $createdAt,
-        public string $updatedAt
+        public string $updatedAt,
+        public ?array $skills,
+        public ?array $socials,
+        public ?string $avatar
     ) {}
 }

@@ -75,6 +75,47 @@ final class UserController extends Controller
             200
         );
     }
+    public function updateProfile(Request $req, Response $res, array $params): Response
+    {
+        $user = $req->getAttribute('user', null);
+
+        if (!$user || empty($user['id'])) {
+            return $res->json(
+                ResponseFormatter::error('Invalid user', 401),
+                401
+            );
+        }
+
+        [$valid, $errors, $payload] = UserUpdateRequest::validateProfile($req->json, $_FILES);
+        if (!$valid) {
+            return $res->json(
+                ResponseFormatter::error('Validation error', 422, $errors),
+                422
+            );
+        }
+
+        [$ok, $msg] = $this->svc->updateProfile($user['id'], $payload);
+        if (!$ok) {
+            return $res->json(
+                ResponseFormatter::error($msg, 400),
+                400
+            );
+        }
+
+        return $res->json(
+            ResponseFormatter::success(
+                'Success',
+                [
+                    'id' => $msg->id,
+                    'avatar' => $msg->avatar,
+                    'skills' => $msg->skills,
+                    'socials' => $msg->socials
+                ],
+                200
+            ),
+            200
+        );
+    }
 
     public function delete(Request $req, Response $res, array $params): Response
     {
