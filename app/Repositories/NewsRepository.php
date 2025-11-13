@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\News;
+use App\Models\Project;
+use Config\Database;
+use PDO;
+
+final class NewsRepository
+{
+    private PDO $db;
+    public function __construct()
+    {
+        $this->db = Database::pdo();
+    }
+
+    public function list(int $limit, int $offset): array
+    {
+        $st = $this->db->prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT :l OFFSET :o');
+        $st->bindValue(':l', $limit, PDO::PARAM_INT);
+        $st->bindValue(':o', $offset, PDO::PARAM_INT);
+        $st->execute();
+        return array_map(fn($r) => $this->map($r), $st->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function count(): int
+    {
+        return (int) $this->db->query('SELECT COUNT(*) FROM news')->fetchColumn();
+    }
+
+    public function findById(int $id): ?News
+    {
+        $st = $this->db->prepare('SELECT * FROM news WHERE id = :id LIMIT 1');
+        $st->execute(['id' => $id]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        return $row ? $this->map($row) : null;
+    }
+
+    public function create(array $fields): int
+    {
+        $cols   = implode(',', array_keys($fields));
+        $params = implode(',', array_map(fn($k) => ":$k", array_keys($fields)));
+
+        $sql = "INSERT INTO news($cols) VALUES($params) RETURNING id";
+        $st  = $this->db->prepare($sql);
+        $st->execute($fields);
+        return (int)$st->fetchColumn();
+    }
+
+    public function update(int $id, array $fields): bool
+    {
+        $set = [];
+        $params = ['id' => $id];
+
+        foreach ($fields as $k => $v) {
+            $set[] = "$k=:$k";
+            $params[$k] = $v;
+        }
+
+        $set[] = "updated_at = NOW()";
+
+        $sql = "UPDATE news SET " . implode(',', $set) . " WHERE id=:id";
+        $st = $this->db->prepare($sql);
+        return $st->execute($params);
+    }
+
+    public function delete(int $id): bool
+    {
+        $st = $this->db->prepare('DELETE FROM news WHERE id=:id');
+        return $st->execute(['id' => $id]);
+    }
+
+    public function syncTags(int $newsId, array $tags): void
+    {
+        // clear old
+        $this->db->prepare('DELETE FROM news_tags WHERE news_id=:nid')->execute(['nid' => $newsId]);
+
+        if (!$tags) return;
+
+        $tagRepo = new \App\Repositories\TagRepository();
+
+        foreach ($tags as $t) {
+            $found = $tagRepo->findByName($t);
+            $tagId = $found ? $found['id'] : $tagRepo->create($t);
+
+            $st = $this->db->prepare('INSERT INTO news_tags(news_id,tag_id) VALUES(:n,:t)');
+            $st->execute(['n' => $newsId, 't' => $tagId]);
+        }
+    }
+
+    private function map(array $r): News
+    {
+        return new News(
+            (int)$r['id'],
+            $r['title'],
+            $r['slug'],
+            $r['summary'],
+            $r['content'],
+            $r['type'],
+            $r['date'],
+            json_decode($r['attachments'] ?? '[]', true),
+            $r['status'],
+            $r['cover_asset_id'] ?? null,
+            $r['reviewer_id'] ?? null,
+            $r['published_at'] ?? null,
+            $r['updated_at'] ?? null,
+            $r['version'],
+            $r['author_id'] ?? null,
+            $r['created_at']
+        );
+    }
+}

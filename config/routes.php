@@ -6,6 +6,7 @@ use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
 use App\Controllers\MediaAssetController;
+use App\Controllers\NewsController;
 use App\Controllers\ProjectController;
 use App\Controllers\RoleController;
 use App\Controllers\RolePermissionController;
@@ -55,5 +56,11 @@ return function (Router $r) {
     $api->get('/project/{id}', [ProjectController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/news', [NewsController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/news/{id}', [NewsController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/news/{id}', [NewsController::class, 'delete'])->middleware(new AuthMiddleware());
   });
 };
