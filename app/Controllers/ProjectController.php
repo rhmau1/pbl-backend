@@ -78,7 +78,14 @@ final class ProjectController extends Controller
     public function update(Request $req, Response $res, array $params): Response
     {
         $id = (int) ($params['id'] ?? 0);
+        $p = $this->svc->get($id);
 
+        if (!$p) {
+            return $res->json(
+                ResponseFormatter::error('Project not found', 404),
+                404
+            );
+        }
         [$valid, $errors, $payload] = ProjectRequest::validateUpdate($req->json);
 
         if (!$valid) {
@@ -99,7 +106,14 @@ final class ProjectController extends Controller
     public function delete(Request $req, Response $res, array $params): Response
     {
         $id = (int) ($params['id'] ?? 0);
+        $p = $this->svc->get($id);
 
+        if (!$p) {
+            return $res->json(
+                ResponseFormatter::error('Project not found', 404),
+                404
+            );
+        }
         $ok = $this->svc->delete($id);
 
         if (!$ok) {
@@ -123,6 +137,14 @@ final class ProjectController extends Controller
         }
 
         $id = (int) ($params['id'] ?? 0);
+        $p = $this->svc->get($id);
+
+        if (!$p) {
+            return $res->json(
+                ResponseFormatter::error('Project not found', 404),
+                404
+            );
+        }
         $ok = $this->svc->like($id, $user['id']);
         return $res->json(
             ResponseFormatter::success($ok, ['id' => $id], 200),
