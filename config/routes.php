@@ -44,16 +44,16 @@ return function (Router $r) {
     $api->put('/role-permissions/{id}', [RolePermissionController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/role-permissions/{id}', [RolePermissionController::class, 'delete'])->middleware(new AuthMiddleware());
 
-    $api->post('/media', [MediaAssetController::class, 'upload']);
-    $api->get('/media', [MediaAssetController::class, 'list']);
-    $api->get('/media/{id}', [MediaAssetController::class, 'detail']);
-    $api->put('/media/{id}', [MediaAssetController::class, 'updateVisibility']);
-    $api->delete('/media/{id}', [MediaAssetController::class, 'delete']);
+    $api->post('/media', [MediaAssetController::class, 'upload'])->middleware(new AuthMiddleware());
+    $api->get('/media', [MediaAssetController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/media/{id}', [MediaAssetController::class, 'detail'])->middleware(new AuthMiddleware());
+    $api->put('/media/{id}', [MediaAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
+    $api->delete('/media/{id}', [MediaAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
-    $api->post('/project', [ProjectController::class, 'create']);
-    $api->get('/project', [ProjectController::class, 'list']);
-    $api->get('/project/{id}', [ProjectController::class, 'get']);
-    $api->put('/project/{id}', [ProjectController::class, 'update']);
-    $api->delete('/project/{id}', [ProjectController::class, 'delete']);
+    $api->post('/project', [ProjectController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/project', [ProjectController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/project/{id}', [ProjectController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
   });
 };
