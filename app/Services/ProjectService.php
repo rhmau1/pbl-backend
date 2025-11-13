@@ -113,6 +113,7 @@ final class ProjectService
 
     public function delete(int $id): bool
     {
+        if (!$this->repo->findById($id)) return false;
         return $this->repo->delete($id);
     }
 }
