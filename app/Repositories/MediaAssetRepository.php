@@ -42,6 +42,13 @@ final class MediaAssetRepository
         $row = $st->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->map($row) : null;
     }
+    public function exists(int $id): bool
+    {
+        $st = $this->db->prepare("SELECT * FROM media_assets WHERE id = :id");
+        $st->execute(['id' => $id]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        return $row ? true : false;
+    }
 
     public function filter(int $limit, int $offset, ?string $type, ?int $visibility, ?int $owner): array
     {
