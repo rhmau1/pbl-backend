@@ -16,11 +16,16 @@ final class ProjectRepository
 
     public function list(int $limit, int $offset): array
     {
-        $st = $this->db->prepare('SELECT * FROM projects ORDER BY created_at DESC LIMIT :l OFFSET :o');
+        $st = $this->db->prepare('SELECT * FROM projects_view ORDER BY created_at DESC LIMIT :l OFFSET :o');
         $st->bindValue(':l', $limit, PDO::PARAM_INT);
         $st->bindValue(':o', $offset, PDO::PARAM_INT);
         $st->execute();
-        return array_map(fn($r) => $this->map($r), $st->fetchAll(PDO::FETCH_ASSOC));
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($r) => [
+            ...$r,
+            'technologies' => json_decode($r['technologies'], true),
+            'tags' => json_decode($r['tags'], true),
+        ], $rows);
     }
 
     public function count(): int
