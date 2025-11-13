@@ -49,6 +49,14 @@ final class ProjectController extends Controller
 
     public function create(Request $req, Response $res): Response
     {
+        $user = $req->getAttribute('user', null);
+        if (!$user || empty($user['id'])) {
+            return $res->json(
+                ResponseFormatter::error('Invalid user', 401),
+                401
+            );
+        }
+
         [$valid, $errors, $payload] = ProjectRequest::validateCreate($req->json);
 
         if (!$valid) {
@@ -57,6 +65,7 @@ final class ProjectController extends Controller
                 422
             );
         }
+        $payload['author_id'] = $user['id'];
 
         $id = $this->svc->create($payload);
 
