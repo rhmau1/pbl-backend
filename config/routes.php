@@ -6,6 +6,7 @@ use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
 use App\Controllers\MediaAssetController;
+use App\Controllers\ProjectController;
 use App\Controllers\RoleController;
 use App\Controllers\RolePermissionController;
 
@@ -48,5 +49,11 @@ return function (Router $r) {
     $api->get('/media/{id}', [MediaAssetController::class, 'detail']);
     $api->put('/media/{id}', [MediaAssetController::class, 'updateVisibility']);
     $api->delete('/media/{id}', [MediaAssetController::class, 'delete']);
+
+    $api->post('/project', [ProjectController::class, 'create']);
+    $api->get('/project', [ProjectController::class, 'list']);
+    $api->get('/project/{id}', [ProjectController::class, 'get']);
+    $api->put('/project/{id}', [ProjectController::class, 'update']);
+    $api->delete('/project/{id}', [ProjectController::class, 'delete']);
   });
 };
