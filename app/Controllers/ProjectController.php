@@ -114,4 +114,19 @@ final class ProjectController extends Controller
             200
         );
     }
+
+    public function like(Request $req, Response $res, array $params): Response
+    {
+        $user = $req->getAttribute('user', null);
+        if (!$user || empty($user['id'])) {
+            return $res->json(ResponseFormatter::error('Invalid user', 401), 401);
+        }
+
+        $id = (int) ($params['id'] ?? 0);
+        $ok = $this->svc->like($id, $user['id']);
+        return $res->json(
+            ResponseFormatter::success($ok, ['id' => $id], 200),
+            200
+        );
+    }
 }

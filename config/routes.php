@@ -54,6 +54,7 @@ return function (Router $r) {
     $api->post('/project', [ProjectController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project', [ProjectController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/project/{id}', [ProjectController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->post('/project/like/{id}', [ProjectController::class, 'like'])->middleware(new AuthMiddleware());
     $api->put('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
 

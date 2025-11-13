@@ -116,4 +116,21 @@ final class ProjectService
         if (!$this->repo->findById($id)) return false;
         return $this->repo->delete($id);
     }
+
+    public function like(int $projectId, int $userId): string
+    {
+        if (!$this->repo->findById($projectId)) {
+            throw new Exception("Project not found");
+        }
+
+        $hasLiked = $this->repo->hasLiked($projectId, $userId);
+
+        if ($hasLiked) {
+            $this->repo->unlike($projectId, $userId);
+            return "unliked";
+        } else {
+            $this->repo->like($projectId, $userId);
+            return "liked";
+        }
+    }
 }

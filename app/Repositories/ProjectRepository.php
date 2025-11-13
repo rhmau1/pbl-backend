@@ -87,6 +87,24 @@ final class ProjectRepository
             $st->execute(['p' => $projectId, 't' => $tagId]);
         }
     }
+    public function hasLiked(int $projectId, int $userId): bool
+    {
+        $st = $this->db->prepare('SELECT 1 FROM project_likes WHERE project_id=:p AND user_id=:u LIMIT 1');
+        $st->execute(['p' => $projectId, 'u' => $userId]);
+        return (bool) $st->fetchColumn();
+    }
+
+    public function like(int $projectId, int $userId): void
+    {
+        $st = $this->db->prepare('INSERT INTO project_likes(project_id, user_id) VALUES(:p, :u)');
+        $st->execute(['p' => $projectId, 'u' => $userId]);
+    }
+
+    public function unlike(int $projectId, int $userId): void
+    {
+        $st = $this->db->prepare('DELETE FROM project_likes WHERE project_id=:p AND user_id=:u');
+        $st->execute(['p' => $projectId, 'u' => $userId]);
+    }
 
     private function map(array $r): Project
     {
