@@ -58,7 +58,7 @@ final class AuthMiddleware implements MiddlewareInterface
             );
         } catch (\Throwable $e) {
             return (new Response())->json(
-                ResponseFormatter::error('Invalid token', 401),
+                ResponseFormatter::error($e, 401),
                 401
             );
         }
