@@ -63,5 +63,11 @@ return function (Router $r) {
     $api->get('/news/{id}', [NewsController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/news/{id}', [NewsController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    // PUBLIC
+    $api->get('/public/news', [NewsController::class, 'list']);
+    $api->get('/public/project', [ProjectController::class, 'list']);
+    $api->get('/public/media', [MediaAssetController::class, 'list']);
+    $api->get('/public/categories', [CategoryController::class, 'list']);
   });
 };
