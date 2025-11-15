@@ -6,10 +6,14 @@ use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
 use App\Controllers\MediaAssetController;
+use App\Controllers\MediaSocialController;
+use App\Controllers\MitraPartnerController;
 use App\Controllers\NewsController;
 use App\Controllers\ProjectController;
 use App\Controllers\RoleController;
 use App\Controllers\RolePermissionController;
+use App\Controllers\SejarahController;
+use App\Controllers\VisiMisiController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -63,6 +67,30 @@ return function (Router $r) {
     $api->get('/news/{id}', [NewsController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/news/{id}', [NewsController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/visi-misi', [VisiMisiController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/visi-misi', [VisiMisiController::class, 'list']);
+    $api->get('/visi-misi/{id}', [VisiMisiController::class, 'get']);
+    $api->put('/visi-misi/{id}', [VisiMisiController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/visi-misi/{id}', [VisiMisiController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/sejarah', [SejarahController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/sejarah', [SejarahController::class, 'list']);
+    $api->get('/sejarah/{id}', [SejarahController::class, 'get']);
+    $api->put('/sejarah/{id}', [SejarahController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/sejarah/{id}', [SejarahController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/media-social', [MediaSocialController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/media-social', [MediaSocialController::class, 'list']);
+    $api->get('/media-social/{id}', [MediaSocialController::class, 'get']);
+    $api->put('/media-social/{id}', [MediaSocialController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/media-social/{id}', [MediaSocialController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/mitra-partner', [MitraPartnerController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/mitra-partner', [MitraPartnerController::class, 'list']);
+    $api->get('/mitra-partner/{id}', [MitraPartnerController::class, 'get']);
+    $api->post('/mitra-partner/{id}', [MitraPartnerController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/mitra-partner/{id}', [MitraPartnerController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // PUBLIC
     $api->get('/public/news', [NewsController::class, 'list']);
