@@ -28,8 +28,14 @@ final class MediaAssetService
             return [true, ['reuse' => true, 'url' => $exists->url]];
 
         $folder = "public/uploads/";
-        if (!file_exists($folder))
-            mkdir($folder, 0777, true);
+        if (!is_dir($folder)) {
+            if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
+                throw new Exception("Failed to create directory");
+            }
+        }
+        if (!is_uploaded_file($file["tmp_name"])) {
+            throw new Exception("Invalid uploaded file");
+        }
 
         $filename = uniqid() . "_" . strtolower(str_replace(' ', '-', basename($file["name"])));
         $path = $folder . $filename;
@@ -47,7 +53,12 @@ final class MediaAssetService
             ':owner'   => $owner,
             ':vis'     => $visibility,
         ]);
-
+        if (!$id) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
+            return [false, null];
+        }
         return [true, [
             'id'         => $id,
             'url'        => $path,
