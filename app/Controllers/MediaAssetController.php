@@ -33,7 +33,15 @@ final class MediaAssetController extends Controller
             $visibility = $req->json['visibility'] ?? 1;
             $caption    = $req->json['caption'] ?? null;
             $alt        = $req->json['alt_text'] ?? null;
-            $owner      = $req->json['owner_id'] ?? null;
+            $user = $req->getAttribute('user', null);
+
+            if (!$user || empty($user['id'])) {
+                return $res->json(
+                    ResponseFormatter::error('Invalid user', 401),
+                    401
+                );
+            }
+            $owner      = $user['id'] ?? null;
 
             MediaAssetUploadRequest::validate($file, $visibility);
 

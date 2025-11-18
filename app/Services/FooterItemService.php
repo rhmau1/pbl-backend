@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\RoleRepository;
-use App\Repositories\RolePermissionRepository;
+use App\Repositories\FooterItemRepository;
+use App\Repositories\FooterSectionRepository;
 
-final class RolePermissionService
+final class FooterItemService
 {
-    public function __construct(private ?RolePermissionRepository $repo = null, private ?RoleRepository $roleRepo = null)
+    public function __construct(private ?FooterItemRepository $repo = null, private ?FooterSectionRepository $footerSectionRepo = null)
     {
-        $this->repo ??= new RolePermissionRepository();
-        $this->roleRepo ??= new RoleRepository();
+        $this->repo ??= new FooterItemRepository();
+        $this->footerSectionRepo ??= new FooterSectionRepository();
     }
 
     public function paginate(int $page, int $limit): array
@@ -39,22 +39,21 @@ final class RolePermissionService
         ];
     }
 
-    public function create(int $roleId, string $permission): array
+    public function create(array $payload): array
     {
-        $role = $this->roleRepo->findById($roleId);
-        if (!$role) {
-            return [false, 'Role ID not found'];
+        $section = $this->footerSectionRepo->findById($payload['section_id']);
+        if (!$section) {
+            return [false, 'Footer section ID not found'];
         }
-
-        $id = $this->repo->create($roleId, $permission);
-
+        $id = $this->repo->create($payload);
         return [true, [
             'id'         => $id,
-            'role_id'    => $roleId,
-            'permission' => $permission
+            'section_id'    => $payload['section_id'],
+            'label' => $payload['label'],
+            'content' => $payload['content'],
+            'position' => $payload['position'],
         ]];
     }
-
     public function get(int $id): ?array
     {
         $u = $this->repo->findById($id);
@@ -63,35 +62,33 @@ final class RolePermissionService
 
         return [
             'id' => $u->id,
-            'role_id'    => $u->role_id,
-            'permission' => $u->permission
+            'section_id' => $u->section_id,
+            'label' => $u->label,
+            'content' => $u->content,
+            'position' => $u->position
         ];
     }
 
-    public function update(int $id, int $roleId, string $permission): array
+    public function update(int $id, array $payload): array
     {
-        $role = $this->roleRepo->findById($roleId);
-        if (!$role) {
-            return [false, 'Role ID not found'];
-        }
         $u = $this->repo->findById($id);
         if (!$u) {
-            return [false, 'Role Permission ID not found'];
+            return [false, 'FooterItem ID not found'];
         }
 
-        $success = $this->repo->update($id, $roleId, $permission);
+        $success = $this->repo->update($id, $payload);
         if (!$success) {
             return [false, 'Database update failed'];
         }
 
-        return [true, 'Role updated successfully'];
+        return [true, 'FooterItem updated successfully'];
     }
 
     public function delete(int $id): array
     {
         $u = $this->repo->findById($id);
         if (!$u) {
-            return [false, 'Role ID not found'];
+            return [false, 'FooterItem ID not found'];
         }
 
         $success = $this->repo->delete($id);
@@ -99,6 +96,6 @@ final class RolePermissionService
             return [false, 'Database delete failed'];
         }
 
-        return [true, 'Role deleted successfully'];
+        return [true, 'FooterItem deleted successfully'];
     }
 }

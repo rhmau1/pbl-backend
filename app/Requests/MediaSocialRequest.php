@@ -34,7 +34,6 @@ final class MediaSocialRequest
         $url = isset($in['url']) ? trim((string) $in['url']) : null;
         $icon = isset($in['icon']) ? trim((string) $in['icon']) : null;
         $position = isset($in['position']) ? (int) $in['position'] : null;
-        var_dump($position);
         $errors = [];
 
         if ($platform !== null && $platform === '')

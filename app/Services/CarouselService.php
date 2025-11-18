@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\CategoryRepository;
+use App\Repositories\CarouselRepository;
 
-final class CategoryService
+final class CarouselService
 {
-    public function __construct(private ?CategoryRepository $repo = null)
+    public function __construct(private ?CarouselRepository $repo = null)
     {
-        $this->repo ??= new CategoryRepository();
+        $this->repo ??= new CarouselRepository();
     }
 
     public function paginate(int $page, int $limit): array
@@ -37,11 +37,13 @@ final class CategoryService
         ];
     }
 
-    public function create(string $name, string $type): array
+    public function create(string $carousel_url, int $position): array
     {
-        if ($this->repo->findByName($name))
-            return [false, 'Category already registered'];
-        $id = $this->repo->create($name, $type);
+        if ($position <= 0) {
+            $position = $this->repo->getMaxPosition() + 1;
+        }
+
+        $id = $this->repo->create($carousel_url, $position);
 
         if (!$id) {
             return [false, null];
@@ -50,13 +52,13 @@ final class CategoryService
         return [
             true,
             [
-                'id'    => $id,
-                'name'  => $name,
-                'slug'  => strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($name))),
-                'type'  => $type
+                'id' => $id,
+                'carousel_url' => $carousel_url,
+                'position' => $position
             ]
         ];
     }
+
     public function get(int $id): ?array
     {
         $u = $this->repo->findById($id);
@@ -65,26 +67,28 @@ final class CategoryService
 
         return [
             'id' => $u->id,
-            'name' => $u->name,
-            'slug' => $u->slug,
-            'type' => $u->type
+            'carousel_url' => $u->carousel_url,
+            'position' => $u->position
         ];
     }
 
     public function update(int $id, array $payload): array
     {
         $fields = [];
-        if (isset($payload['name']) && trim($payload['name']) !== '')
-            $fields['name'] = (string) $payload['name'];
-        if (isset($payload['type']) && trim($payload['type']) !== '')
-            $fields['type'] = (string) $payload['type'];
+        if (isset($payload['carousel_url']) && trim($payload['carousel_url']) !== '')
+            $fields['carousel_url'] = (string) $payload['carousel_url'];
+        if (isset($payload['position']))
+            $fields['position'] = (int) $payload['position'];
+
         if (!$fields)
             return [false, 'No fields to update'];
+
         $u = $this->repo->findById($id);
         if (!$u)
-            return [false, 'Category not found'];
-        $id = $this->repo->update($id, $fields);
-        return [true, $id];
+            return [false, 'Carousel not found'];
+
+        $success = $this->repo->update($id, $fields);
+        return [true, $success];
     }
 
     public function delete(int $id): bool
@@ -93,5 +97,10 @@ final class CategoryService
         if (!$u)
             return false;
         return $this->repo->delete($id);
+    }
+
+    public function listAll(): array
+    {
+        return $this->repo->list(10000, 0); // Get all carousels
     }
 }

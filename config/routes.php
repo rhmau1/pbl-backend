@@ -5,9 +5,13 @@ use App\Middlewares\AuthMiddleware;
 use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
+use App\Controllers\FooterItemController;
+use App\Controllers\FooterSectionController;
 use App\Controllers\MediaAssetController;
 use App\Controllers\MediaSocialController;
+use App\Controllers\CarouselController;
 use App\Controllers\MitraPartnerController;
+use App\Controllers\NavbarLogoController;
 use App\Controllers\NewsController;
 use App\Controllers\ProjectController;
 use App\Controllers\RoleController;
@@ -27,7 +31,7 @@ return function (Router $r) {
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->put('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
-    $api->post('/users/profile/{id}', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
+    $api->post('/users/profile', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
 
@@ -92,7 +96,33 @@ return function (Router $r) {
     $api->post('/mitra-partner/{id}', [MitraPartnerController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/mitra-partner/{id}', [MitraPartnerController::class, 'delete'])->middleware(new AuthMiddleware());
 
+    $api->post('/footer-section', [FooterSectionController::class, 'create']);
+    $api->get('/footer-section', [FooterSectionController::class, 'list']);
+    $api->get('/footer-section/{id}', [FooterSectionController::class, 'get']);
+    $api->put('/footer-section/{id}', [FooterSectionController::class, 'update']);
+    $api->delete('/footer-section/{id}', [FooterSectionController::class, 'delete']);
+
+    $api->post('/footer-item', [FooterItemController::class, 'create']);
+    $api->get('/footer-item', [FooterItemController::class, 'list']);
+    $api->get('/footer-item/{id}', [FooterItemController::class, 'get']);
+    $api->put('/footer-item/{id}', [FooterItemController::class, 'update']);
+    $api->delete('/footer-item/{id}', [FooterItemController::class, 'delete']);
+
+    $api->post('/carousel', [CarouselController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/carousel', [CarouselController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/carousel/{id}', [CarouselController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->post('/carousel/{id}', [CarouselController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/carousel/{id}', [CarouselController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/navbar-logo', [NavbarLogoController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/navbar-logo', [NavbarLogoController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/navbar-logo/{id}', [NavbarLogoController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->post('/navbar-logo/{id}', [NavbarLogoController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/navbar-logo/{id}', [NavbarLogoController::class, 'delete'])->middleware(new AuthMiddleware());
+    $api->get('/public/navbar-logo/active', [NavbarLogoController::class, 'getActive']);
+
     // PUBLIC
+    $api->get('/public/carousel', [CarouselController::class, 'getAll']);
     $api->get('/public/news', [NewsController::class, 'list']);
     $api->get('/public/project', [ProjectController::class, 'list']);
     $api->get('/public/media', [MediaAssetController::class, 'list']);

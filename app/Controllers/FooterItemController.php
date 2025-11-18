@@ -6,14 +6,14 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Helpers\ResponseFormatter;
-use App\Requests\RoleRequest;
-use App\Services\RoleService;
+use App\Requests\FooterItemRequest;
+use App\Services\FooterItemService;
 
-final class RoleController extends Controller
+final class FooterItemController extends Controller
 {
-    public function __construct(private ?RoleService $svc = null)
+    public function __construct(private ?FooterItemService $svc = null)
     {
-        $this->svc ??= new RoleService();
+        $this->svc ??= new FooterItemService();
     }
 
     public function list(Request $req, Response $res): Response
@@ -39,7 +39,7 @@ final class RoleController extends Controller
 
         if (!$u) {
             return $res->json(
-                ResponseFormatter::error('Role not found', 404),
+                ResponseFormatter::error('FooterItem not found', 404),
                 404
             );
         }
@@ -56,7 +56,7 @@ final class RoleController extends Controller
 
         $input = $req->json ?: $_POST;
 
-        [$valid, $errors, $payload] = RoleRequest::validate($input);
+        [$valid, $errors, $payload] = FooterItemRequest::validateUpdate($input);
         if (!$valid) {
             return $res->json(
                 ResponseFormatter::error('Validation error', 422, $errors),
@@ -64,7 +64,7 @@ final class RoleController extends Controller
             );
         }
 
-        [$ok, $msg] = $this->svc->update($id, $payload['name']);
+        [$ok, $msg] = $this->svc->update($id, $payload);
 
         if (!$ok) {
             return $res->json(
@@ -80,7 +80,7 @@ final class RoleController extends Controller
     }
     public function create(Request $req, Response $res): Response
     {
-        [$valid, $errors, $payload] = RoleRequest::validate($req->json);
+        [$valid, $errors, $payload] = FooterItemRequest::validateCreate($req->json);
 
         if (!$valid) {
             return $res->json(
@@ -89,7 +89,7 @@ final class RoleController extends Controller
             );
         }
 
-        [$ok, $out] = $this->svc->create($payload['name']);
+        [$ok, $out] = $this->svc->create($payload);
         if (!$ok) {
             return $res->json(
                 ResponseFormatter::error($out, 400),
@@ -99,7 +99,10 @@ final class RoleController extends Controller
 
         $data = [
             'id'    => $out['id'],
-            'name'  => $out['name']
+            'section_id'  => $out['section_id'],
+            'label' => $out['label'],
+            'content' => $out['content'],
+            'position' => $out['position']
         ];
 
         return $res->json(

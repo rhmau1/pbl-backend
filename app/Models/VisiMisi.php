@@ -9,6 +9,6 @@ final class VisiMisi
         public string $type,
         public string $content,
         public int $position,
-        public string $updatedAt
+        public string $updated_at
     ) {}
 }

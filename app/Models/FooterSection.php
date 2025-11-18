@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-final class RolePermission
+final class FooterSection
 {
     public function __construct(
         public ?int $id,
-        public int $role_id,
-        public string $permission
+        public string $section_name,
+        public int $position
     ) {}
 }

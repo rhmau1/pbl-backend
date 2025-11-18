@@ -52,11 +52,11 @@ final class AuthService
     public function login(string $email, string $password): array
     {
         $u = $this->repo->findByEmail($email);
-        if (!$u || !password_verify($password, $u->passwordHash)) {
+        if (!$u || !password_verify($password, $u->password_hash)) {
             return [false, 'Invalid credentials'];
         }
 
-        $token = $this->issueToken($u->id, $u->roleId);
+        $token = $this->issueToken($u->id, $u->role_id);
         $this->repo->updateLastLogin($u->id);
 
         return [
@@ -67,8 +67,8 @@ final class AuthService
                     'id' => $u->id,
                     'email' => $u->email,
                     'name' => $u->name,
-                    'role_id' => $u->roleId,
-                    'last_login_at' => $u->lastLoginAt,
+                    'role_id' => $u->role_id,
+                    'last_login_at' => $u->last_login_at,
                 ],
             ],
         ];

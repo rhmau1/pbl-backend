@@ -64,10 +64,10 @@ final class CategoryController extends Controller
             );
         }
 
-        $ok = $this->svc->update($id, $payload);
+        [$ok, $msg] = $this->svc->update($id, $payload);
         if (!$ok) {
             return $res->json(
-                ResponseFormatter::error('Cannot update', 400),
+                ResponseFormatter::error($msg, 400),
                 400
             );
         }

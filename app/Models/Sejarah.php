@@ -8,6 +8,6 @@ final class Sejarah
         public ?int $id,
         public string $title,
         public string $content,
-        public string $updatedAt
+        public string $updated_at
     ) {}
 }
