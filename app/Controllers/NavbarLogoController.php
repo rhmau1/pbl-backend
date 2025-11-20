@@ -89,9 +89,7 @@ final class NavbarLogoController extends Controller
                 throw new Exception("Failed saving file");
             }
 
-            $logo_url = '/' . $path;
-
-            [$ok, $data] = $this->svc->create($logo_url, $url, $is_active);
+            [$ok, $data] = $this->svc->create($path, $url, $is_active);
             if (!$ok) {
                 unlink($path); // Cleanup on failure
                 return $res->json(
@@ -150,7 +148,7 @@ final class NavbarLogoController extends Controller
                     throw new Exception("Failed saving file");
                 }
 
-                $logo_url = '/' . $path;
+                $logo_url = $path;
             }
 
             [$valid, $errors, $payload] = NavbarLogoRequest::validate($input);
