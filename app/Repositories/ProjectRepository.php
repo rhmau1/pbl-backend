@@ -32,6 +32,10 @@ final class ProjectRepository
     {
         return (int) $this->db->query('SELECT COUNT(*) FROM projects')->fetchColumn();
     }
+    public function countPublished(): int
+    {
+        return (int) $this->db->query('SELECT COUNT(*) FROM projects WHERE published_at IS NOT NULL')->fetchColumn();
+    }
 
     public function findById(int $id): ?Project
     {

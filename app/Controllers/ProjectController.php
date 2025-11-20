@@ -29,6 +29,16 @@ final class ProjectController extends Controller
         );
     }
 
+    public function countPublished(Request $req, Response $res, array $params): Response
+    {
+        $p = $this->svc->countPublished();
+
+        return $res->json(
+            ResponseFormatter::success('Success', $p, 200),
+            200
+        );
+    }
+
     public function get(Request $req, Response $res, array $params): Response
     {
         $id = (int) ($params['id'] ?? 0);

@@ -41,6 +41,11 @@ final class ProjectService
         ];
     }
 
+    public function countPublished(): int
+    {
+        return $this->repo->countPublished();
+    }
+
     public function get(int $id): ?array
     {
         $p = $this->repo->findById($id);
