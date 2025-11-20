@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\News;
-use App\Models\Project;
 use Config\Database;
 use PDO;
 
