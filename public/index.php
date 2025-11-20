@@ -17,6 +17,9 @@ if (preg_match('/^\/navbarLogo\/.+/', $_SERVER['REQUEST_URI'])) {
 if (preg_match('/^\/struktur\/.+/', $_SERVER['REQUEST_URI'])) {
   return false; // biarkan file langsung serve
 }
+if (preg_match('/^\/timKreatif\/.+/', $_SERVER['REQUEST_URI'])) {
+  return false; // biarkan file langsung serve
+}
 
 require __DIR__ . '/../vendor/autoload.php';
 

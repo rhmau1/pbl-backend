@@ -20,6 +20,7 @@ use App\Controllers\SejarahController;
 use App\Controllers\StrukturOrganisasiController;
 use App\Controllers\VisiMisiController;
 use App\Controllers\ProjectMemberController;
+use App\Controllers\TimKreatifController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -70,8 +71,8 @@ return function (Router $r) {
     $api->post('/project-members', [ProjectMemberController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project-members', [ProjectMemberController::class, 'list']);
     $api->get('/project-members/{id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/project-members/{id}', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
-    $api->delete('/project-members/{id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
+    $api->put('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // Counting endpoints
     $api->get('/project/count/published', [ProjectController::class, 'countPublished']);
@@ -140,6 +141,12 @@ return function (Router $r) {
     $api->get('/navbar-logo/{id}', [NavbarLogoController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/navbar-logo/{id}', [NavbarLogoController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/navbar-logo/{id}', [NavbarLogoController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/tim-kreatif', [TimKreatifController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/tim-kreatif', [TimKreatifController::class, 'list']);
+    $api->get('/tim-kreatif/{id}', [TimKreatifController::class, 'get']);
+    $api->post('/tim-kreatif/{id}', [TimKreatifController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/tim-kreatif/{id}', [TimKreatifController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // PUBLIC
     $api->get('/public/carousel', [CarouselController::class, 'getAll']);
