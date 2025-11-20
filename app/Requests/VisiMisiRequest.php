@@ -11,8 +11,8 @@ final class VisiMisiRequest
     {
         $content = isset($in['content']) ? trim((string)$in['content']) : '';
         $type = isset($in['type']) ? trim((string) $in['type']) : '';
-        if (!in_array($type, ["visi", "misi"])) {
-            throw new Exception("Invalid type (visi or misi only)");
+        if (!in_array($type, ["visi", "misi", "sejarah"])) {
+            throw new Exception("Invalid type (visi, misi, sejarah only)");
         }
         $position = isset($in['position']) ? (int)$in['position'] : null;
         $errors = [];
@@ -32,8 +32,8 @@ final class VisiMisiRequest
     {
         $content = isset($in['content']) ? trim((string) $in['content']) : null;
         $type = isset($in['type']) ? trim((string) $in['type']) : null;
-        if (!in_array($type, ["visi", "misi"])) {
-            throw new Exception("Invalid type (visi or misi only)");
+        if (!in_array($type, ["visi", "misi", "sejarah"])) {
+            throw new Exception("Invalid type (visi, misi, sejarah only)");
         }
         $position = isset($in['position']) ? (int) $in['position'] : null;
 
