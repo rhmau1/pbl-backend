@@ -45,7 +45,7 @@ final class ProjectMemberService
             return [false, 'Update failed'];
         }
 
-        return [true, null];
+        return $payload;
     }
 
     public function create(array $payload): array

@@ -116,7 +116,7 @@ final class ProjectMemberController extends Controller
         $ok = $this->svc->update($payload);
 
         return $res->json(
-            ResponseFormatter::success('Updated', ['id' => $ok], 200),
+            ResponseFormatter::success('Updated', ['project_id' => $ok['project_id'], 'member_id' => $ok['member_id'], 'role' => $ok['role']], 200),
             200
         );
     }
