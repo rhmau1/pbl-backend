@@ -64,7 +64,7 @@ final class StrukturOrganisasiService
 
         if (isset($payload['foto']) && is_array($payload['foto'])) {
 
-            $folder = "public/struktur/foto/";
+            $folder = "public/struktur/";
             if (!file_exists($folder))
                 mkdir($folder, 0777, true);
 
@@ -78,7 +78,7 @@ final class StrukturOrganisasiService
                 move_uploaded_file($payload['foto']['tmp_name'], $targetPath);
             }
 
-            $payload['foto'] = '/struktur/foto/' . $filename;
+            $payload['foto'] = '/struktur/' . $filename;
         } else {
             unset($payload['foto']);
         }
@@ -96,7 +96,7 @@ final class StrukturOrganisasiService
     {
         if (isset($payload['foto']) && is_array($payload['foto'])) {
 
-            $folder = "public/struktur/foto/";
+            $folder = "public/struktur/";
             if (!file_exists($folder))
                 mkdir($folder, 0777, true);
 
@@ -110,7 +110,7 @@ final class StrukturOrganisasiService
                 move_uploaded_file($payload['foto']['tmp_name'], $targetPath);
             }
 
-            $payload['foto'] = 'struktur/foto/' . $filename;
+            $payload['foto'] = 'struktur/' . $filename;
         } else {
             $payload['foto'] = null;
         }
