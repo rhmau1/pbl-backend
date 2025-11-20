@@ -17,7 +17,9 @@ use App\Controllers\ProjectController;
 use App\Controllers\RoleController;
 use App\Controllers\RolePermissionController;
 use App\Controllers\SejarahController;
+use App\Controllers\StrukturOrganisasiController;
 use App\Controllers\VisiMisiController;
+use App\Controllers\ProjectMemberController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -65,6 +67,19 @@ return function (Router $r) {
     $api->post('/project/like/{id}', [ProjectController::class, 'like'])->middleware(new AuthMiddleware());
     $api->put('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
+    $api->post('/project-members', [ProjectMemberController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/project-members', [ProjectMemberController::class, 'list']);
+    $api->get('/project-members/{id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/project-members/{id}', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/project-members/{id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    // Counting endpoints
+    $api->get('/project/count/published', [ProjectController::class, 'countPublished']);
+    $api->get('/project-members/count/member', [ProjectMemberController::class, 'countAllMember']);
+    $api->get('/project-members/count/dosen', [ProjectMemberController::class, 'countAllDosen']);
+    $api->get('/project-members/count/member/{id}', [ProjectMemberController::class, 'countMemberByProject']);
+    $api->get('/project-members/count/dosen/{id}', [ProjectMemberController::class, 'countDosenByProject']);
+
 
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/news', [NewsController::class, 'list'])->middleware(new AuthMiddleware());
@@ -78,11 +93,17 @@ return function (Router $r) {
     $api->put('/visi-misi/{id}', [VisiMisiController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/visi-misi/{id}', [VisiMisiController::class, 'delete'])->middleware(new AuthMiddleware());
 
-    $api->post('/sejarah', [SejarahController::class, 'create'])->middleware(new AuthMiddleware());
-    $api->get('/sejarah', [SejarahController::class, 'list']);
-    $api->get('/sejarah/{id}', [SejarahController::class, 'get']);
-    $api->put('/sejarah/{id}', [SejarahController::class, 'update'])->middleware(new AuthMiddleware());
-    $api->delete('/sejarah/{id}', [SejarahController::class, 'delete'])->middleware(new AuthMiddleware());
+    // $api->post('/sejarah', [SejarahController::class, 'create'])->middleware(new AuthMiddleware());
+    // $api->get('/sejarah', [SejarahController::class, 'list']);
+    // $api->get('/sejarah/{id}', [SejarahController::class, 'get']);
+    // $api->put('/sejarah/{id}', [SejarahController::class, 'update'])->middleware(new AuthMiddleware());
+    // $api->delete('/sejarah/{id}', [SejarahController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/struktur-organisasi', [StrukturOrganisasiController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/struktur-organisasi', [StrukturOrganisasiController::class, 'list']);
+    $api->get('/struktur-organisasi/{id}', [StrukturOrganisasiController::class, 'get']);
+    $api->post('/struktur-organisasi/{id}', [StrukturOrganisasiController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/struktur-organisasi/{id}', [StrukturOrganisasiController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/media-social', [MediaSocialController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/media-social', [MediaSocialController::class, 'list']);
@@ -119,13 +140,14 @@ return function (Router $r) {
     $api->get('/navbar-logo/{id}', [NavbarLogoController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/navbar-logo/{id}', [NavbarLogoController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/navbar-logo/{id}', [NavbarLogoController::class, 'delete'])->middleware(new AuthMiddleware());
-    $api->get('/public/navbar-logo/active', [NavbarLogoController::class, 'getActive']);
 
     // PUBLIC
     $api->get('/public/carousel', [CarouselController::class, 'getAll']);
     $api->get('/public/news', [NewsController::class, 'list']);
     $api->get('/public/project', [ProjectController::class, 'list']);
+    $api->get('/public/project/{id}', [ProjectController::class, 'get']);
     $api->get('/public/media', [MediaAssetController::class, 'list']);
     $api->get('/public/categories', [CategoryController::class, 'list']);
+    $api->get('/public/navbar-logo/active', [NavbarLogoController::class, 'getActive']);
   });
 };
