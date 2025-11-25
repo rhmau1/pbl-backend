@@ -2,6 +2,7 @@
 
 use App\Core\Router;
 use App\Middlewares\AuthMiddleware;
+use App\Middlewares\RoleMiddleware;
 use App\Controllers\UserController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
@@ -21,6 +22,7 @@ use App\Controllers\StrukturOrganisasiController;
 use App\Controllers\VisiMisiController;
 use App\Controllers\ProjectMemberController;
 use App\Controllers\TimKreatifController;
+use App\Controllers\AnalyticsController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -80,6 +82,18 @@ return function (Router $r) {
     $api->get('/project-members/count/dosen', [ProjectMemberController::class, 'countAllDosen']);
     $api->get('/project-members/count/member/{id}', [ProjectMemberController::class, 'countMemberByProject']);
     $api->get('/project-members/count/dosen/{id}', [ProjectMemberController::class, 'countDosenByProject']);
+
+    // Analytics endpoints
+    $api->get('/analytics/projects/draft', [AnalyticsController::class, 'countDraftProjects'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/projects/review', [AnalyticsController::class, 'countReviewProjects'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/projects/published', [AnalyticsController::class, 'countPublishedProjects'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/news/draft', [AnalyticsController::class, 'countDraftNews'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/news/review', [AnalyticsController::class, 'countReviewNews'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/news/published', [AnalyticsController::class, 'countPublishedNews'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/traffic/likes', [AnalyticsController::class, 'getTotalLikes'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/traffic/views', [AnalyticsController::class, 'getTotalViews'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/activities/projects', [AnalyticsController::class, 'getRecentProjectActivities'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/activities/news', [AnalyticsController::class, 'getRecentNewsActivities'])->middleware(new AuthMiddleware());
 
 
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
@@ -154,6 +168,7 @@ return function (Router $r) {
     $api->get('/public/project', [ProjectController::class, 'list']);
     $api->get('/public/project/{id}', [ProjectController::class, 'get']);
     $api->get('/public/media', [MediaAssetController::class, 'list']);
+    $api->get('/public/media/{id}', [MediaAssetController::class, 'detail']);
     $api->get('/public/categories', [CategoryController::class, 'list']);
     $api->get('/public/navbar-logo/active', [NavbarLogoController::class, 'getActive']);
   });
