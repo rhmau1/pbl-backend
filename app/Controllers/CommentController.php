@@ -98,17 +98,15 @@ final class CommentController extends Controller
         }
 
         $data = [
-            'comment' => [
-                'id' => $out['id'],
-                'entity_type' => $out['entity_type'],
-                'entity_id' => $out['entity_id'],
-                'author' => $out['author'],
-                'email' => $out['email'],
-                'rating' => $out['rating'],
-                'content' => $out['content'],
-                'status' => $out['status'],
-                'created_at' => $out['created_at'],
-            ],
+            'id' => $out['id'],
+            'entity_type' => $out['entity_type'],
+            'entity_id' => $out['entity_id'],
+            'author' => $out['author'],
+            'email' => $out['email'],
+            'rating' => $out['rating'],
+            'content' => $out['content'],
+            'status' => $out['status'],
+            'created_at' => $out['created_at']
         ];
 
         return $res->json(
