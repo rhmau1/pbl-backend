@@ -23,6 +23,7 @@ use App\Controllers\VisiMisiController;
 use App\Controllers\ProjectMemberController;
 use App\Controllers\TimKreatifController;
 use App\Controllers\AnalyticsController;
+use App\Controllers\CommentController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -32,6 +33,7 @@ return function (Router $r) {
 
     $api->post('/login', [AuthController::class, 'login']);
     $api->post('/register', [AuthController::class, 'register']);
+    $api->get('/validate-token', [AuthController::class, 'validateToken'])->middleware(new AuthMiddleware());
 
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
@@ -161,6 +163,12 @@ return function (Router $r) {
     $api->get('/tim-kreatif/{id}', [TimKreatifController::class, 'get']);
     $api->post('/tim-kreatif/{id}', [TimKreatifController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/tim-kreatif/{id}', [TimKreatifController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/comments', [CommentController::class, 'create'])->middleware(new AuthMiddleware());
+    $api->get('/comments', [CommentController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/comments/{id}', [CommentController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->put('/comments/{id}', [CommentController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->delete('/comments/{id}', [CommentController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // PUBLIC
     $api->get('/public/carousel', [CarouselController::class, 'getAll']);
