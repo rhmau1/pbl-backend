@@ -69,6 +69,7 @@ final class AuthService
                     'name' => $u->name,
                     'role_id' => $u->role_id,
                     'last_login_at' => $u->last_login_at,
+                    'avatar' => $u ->avatar
                 ],
             ],
         ];
