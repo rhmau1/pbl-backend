@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 
 final class UserService
 {
-    public function __construct(private ?UserRepository $repo = null)
+    public function __construct(private ?UserRepository $repo = null, private ?RoleRepository $roleRepo = null)
     {
         $this->repo ??= new UserRepository();
+        $this->roleRepo ??= new RoleRepository();
     }
 
     public function paginate(int $page, int $limit): array
@@ -43,12 +45,14 @@ final class UserService
         $u = $this->repo->findById($id);
         if (!$u)
             return null;
+        $role = $this->roleRepo->findById($u->role_id);
 
         return [
             'id' => $u->id,
             'email' => $u->email,
             'name' => $u->name,
             'role_id' => $u->role_id,
+            'role_name' => $role ? $role->name : null,
             'created_at' => $u->created_at,
             'updated_at' => $u->updated_at ?? null,
             'avatar' => $u->avatar,
