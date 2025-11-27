@@ -56,9 +56,19 @@ final class AuthMiddleware implements MiddlewareInterface
                 ResponseFormatter::error('Token expired', 401),
                 401
             );
+        } catch (\Firebase\JWT\SignatureInvalidException $e) {
+            return (new Response())->json(
+                ResponseFormatter::error('Invalid token signature', 401),
+                401
+            );
+        } catch (\Firebase\JWT\BeforeValidException $e) {
+            return (new Response())->json(
+                ResponseFormatter::error('Token not valid yet', 401),
+                401
+            );
         } catch (\Throwable $e) {
             return (new Response())->json(
-                ResponseFormatter::error($e, 401),
+                ResponseFormatter::error($e->getMessage(), 401),
                 401
             );
         }

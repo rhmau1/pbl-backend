@@ -92,4 +92,13 @@ final class AuthController extends Controller
             200
         );
     }
+
+    public function validateToken(Request $req, Response $res): Response
+    {
+        $user = $req->getAttribute('user');
+        return $res->json(
+            ResponseFormatter::success('Token is valid',  $user, 200),
+            200
+        );
+    }
 }
