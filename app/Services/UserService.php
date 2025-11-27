@@ -51,6 +51,7 @@ final class UserService
             'role_id' => $u->role_id,
             'created_at' => $u->created_at,
             'updated_at' => $u->updated_at ?? null,
+            'avatar' => $u->avatar,
         ];
     }
 
