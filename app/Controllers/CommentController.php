@@ -56,7 +56,7 @@ final class CommentController extends Controller
 
         $input = $req->json ?: $_POST;
 
-        [$valid, $errors, $payload] = CommentRequest::validate($input);
+        [$valid, $errors, $payload] = CommentRequest::validateUpdate($input);
         if (!$valid) {
             return $res->json(
                 ResponseFormatter::error('Validation error', 422, $errors),
@@ -80,7 +80,7 @@ final class CommentController extends Controller
 
     public function create(Request $req, Response $res): Response
     {
-        [$valid, $errors, $payload] = CommentRequest::validate($req->json);
+        [$valid, $errors, $payload] = CommentRequest::validateCreate($req->json);
 
         if (!$valid) {
             return $res->json(
