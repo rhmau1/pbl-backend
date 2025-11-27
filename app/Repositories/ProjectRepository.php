@@ -30,7 +30,7 @@ final class ProjectRepository
 
     public function count(): int
     {
-        return (int) $this->db->query('SELECT COUNT(*) FROM projects')->fetchColumn();
+        return (int) $this->db->query('SELECT COUNT(*) FROM projects_view')->fetchColumn();
     }
     public function countPublished(): int
     {
