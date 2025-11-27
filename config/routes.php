@@ -78,24 +78,21 @@ return function (Router $r) {
     $api->put('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
 
-    // Counting endpoints
-    $api->get('/project/count/published', [ProjectController::class, 'countPublished']);
     $api->get('/project-members/count/member', [ProjectMemberController::class, 'countAllMember']);
     $api->get('/project-members/count/dosen', [ProjectMemberController::class, 'countAllDosen']);
     $api->get('/project-members/count/member/{id}', [ProjectMemberController::class, 'countMemberByProject']);
     $api->get('/project-members/count/dosen/{id}', [ProjectMemberController::class, 'countDosenByProject']);
 
-    // Analytics endpoints
-    $api->get('/analytics/projects/draft', [AnalyticsController::class, 'countDraftProjects'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/projects/review', [AnalyticsController::class, 'countReviewProjects'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/projects/published', [AnalyticsController::class, 'countPublishedProjects'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/news/draft', [AnalyticsController::class, 'countDraftNews'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/news/review', [AnalyticsController::class, 'countReviewNews'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/news/published', [AnalyticsController::class, 'countPublishedNews'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/traffic/likes', [AnalyticsController::class, 'getTotalLikes'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/traffic/views', [AnalyticsController::class, 'getTotalViews'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/activities/projects', [AnalyticsController::class, 'getRecentProjectActivities'])->middleware(new AuthMiddleware());
-    $api->get('/analytics/activities/news', [AnalyticsController::class, 'getRecentNewsActivities'])->middleware(new AuthMiddleware());
+    $api->get('/analytics/projects/draft', [AnalyticsController::class, 'countDraftProjects']);
+    $api->get('/analytics/projects/review', [AnalyticsController::class, 'countReviewProjects']);
+    $api->get('/analytics/projects/published', [AnalyticsController::class, 'countPublishedProjects']);
+    $api->get('/analytics/news/draft', [AnalyticsController::class, 'countDraftNews']);
+    $api->get('/analytics/news/review', [AnalyticsController::class, 'countReviewNews']);
+    $api->get('/analytics/news/published', [AnalyticsController::class, 'countPublishedNews']);
+    $api->get('/analytics/traffic/likes', [AnalyticsController::class, 'getTotalLikes']);
+    $api->get('/analytics/traffic/views', [AnalyticsController::class, 'getTotalViews']);
+    $api->get('/analytics/activities/projects', [AnalyticsController::class, 'getRecentProjectActivities']);
+    $api->get('/analytics/activities/news', [AnalyticsController::class, 'getRecentNewsActivities']);
 
 
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
