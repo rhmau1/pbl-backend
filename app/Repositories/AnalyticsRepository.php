@@ -67,7 +67,7 @@ final class AnalyticsRepository
         return (int) $st->fetchColumn();
     }
 
-    public function getRecentProjectActivities(int $limit = 10): array
+    public function getRecentProjectActivities(int $limit = 5): array
     {
         $st = $this->db->prepare("SELECT id, title, status, created_at, updated_at FROM projects ORDER BY created_at DESC LIMIT :limit");
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -75,7 +75,7 @@ final class AnalyticsRepository
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getRecentNewsActivities(int $limit = 10): array
+    public function getRecentNewsActivities(int $limit = 5): array
     {
         $st = $this->db->prepare("SELECT id, title, status, created_at, updated_at FROM news ORDER BY created_at DESC LIMIT :limit");
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
