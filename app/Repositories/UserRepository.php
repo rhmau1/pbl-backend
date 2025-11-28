@@ -57,16 +57,21 @@ final class UserRepository
 
     public function list(int $limit, int $offset): array
     {
-        $st = $this->db->prepare('SELECT * FROM users ORDER BY created_at DESC LIMIT :l OFFSET :o');
+        $st = $this->db->prepare('SELECT * FROM users_view ORDER BY created_at DESC LIMIT :l OFFSET :o');
         $st->bindValue(':l', $limit, PDO::PARAM_INT);
         $st->bindValue(':o', $offset, PDO::PARAM_INT);
         $st->execute();
-        return array_map(fn($r) => $this->map($r), $st->fetchAll(PDO::FETCH_ASSOC));
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($r) => [
+            ...$r,
+            'skills' => json_decode($r['skills'], true),
+            'socials' => json_decode($r['socials'], true),
+        ], $rows);
     }
 
     public function count(): int
     {
-        return (int) $this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
+        return (int) $this->db->query('SELECT COUNT(*) FROM users_view')->fetchColumn();
     }
 
     public function create(string $email, string $name, string $passwordHash, string $roleId): int
