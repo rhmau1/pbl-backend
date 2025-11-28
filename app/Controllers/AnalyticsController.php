@@ -116,4 +116,14 @@ final class AnalyticsController extends Controller
             200
         );
     }
+
+    public function getProjectAndNewsCountsByMonth(Request $req, Response $res): Response
+    {
+        $data = $this->svc->getProjectAndNewsCountsByMonth();
+
+        return $res->json(
+            ResponseFormatter::success('Success', $data, 200),
+            200
+        );
+    }
 }

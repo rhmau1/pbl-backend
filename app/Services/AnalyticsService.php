@@ -61,4 +61,9 @@ final class AnalyticsService
     {
         return $this->repo->getRecentNewsActivities($limit);
     }
+
+    public function getProjectAndNewsCountsByMonth(): array
+    {
+        return $this->repo->getProjectAndNewsCountsByMonth();
+    }
 }

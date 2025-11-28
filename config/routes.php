@@ -93,7 +93,7 @@ return function (Router $r) {
     $api->get('/analytics/traffic/views', [AnalyticsController::class, 'getTotalViews']);
     $api->get('/analytics/activities/projects', [AnalyticsController::class, 'getRecentProjectActivities']);
     $api->get('/analytics/activities/news', [AnalyticsController::class, 'getRecentNewsActivities']);
-
+    $api->get('/analytics/project-news-counts-by-month', [AnalyticsController::class, 'getProjectAndNewsCountsByMonth']);
 
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/news', [NewsController::class, 'list'])->middleware(new AuthMiddleware());

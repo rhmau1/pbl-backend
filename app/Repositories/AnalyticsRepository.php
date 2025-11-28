@@ -82,4 +82,12 @@ final class AnalyticsRepository
         $st->execute();
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getProjectAndNewsCountsByMonth(): array
+    {
+        $sql = "SELECT * FROM project_news_count_by_month_views";
+
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
