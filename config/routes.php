@@ -37,7 +37,7 @@ return function (Router $r) {
 
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
     $api->post('/users/profile', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
@@ -45,19 +45,19 @@ return function (Router $r) {
     $api->post('/categories', [CategoryController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/categories', [CategoryController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/categories/{id}', [CategoryController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/categories/{id}', [CategoryController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/categories/{id}', [CategoryController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/categories/{id}', [CategoryController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/roles', [RoleController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/roles', [RoleController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/roles/{id}', [RoleController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/roles/{id}', [RoleController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/roles/{id}', [RoleController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/roles/{id}', [RoleController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/role-permissions', [RolePermissionController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/role-permissions', [RolePermissionController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/role-permissions/{id}', [RolePermissionController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/role-permissions/{id}', [RolePermissionController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/role-permissions/{id}', [RolePermissionController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/role-permissions/{id}', [RolePermissionController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/media', [MediaAssetController::class, 'upload'])->middleware(new AuthMiddleware());
@@ -70,12 +70,12 @@ return function (Router $r) {
     $api->get('/project', [ProjectController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/project/{id}', [ProjectController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/project/like/{id}', [ProjectController::class, 'like'])->middleware(new AuthMiddleware());
-    $api->put('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/project/{id}', [ProjectController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/project-members', [ProjectMemberController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project-members', [ProjectMemberController::class, 'list']);
     $api->get('/project-members/{id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->get('/project-members/count/member', [ProjectMemberController::class, 'countAllMember']);
@@ -98,19 +98,19 @@ return function (Router $r) {
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/news', [NewsController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/news/{id}', [NewsController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/news/{id}', [NewsController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/visi-misi', [VisiMisiController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/visi-misi', [VisiMisiController::class, 'list']);
     $api->get('/visi-misi/{id}', [VisiMisiController::class, 'get']);
-    $api->put('/visi-misi/{id}', [VisiMisiController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/visi-misi/{id}', [VisiMisiController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/visi-misi/{id}', [VisiMisiController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // $api->post('/sejarah', [SejarahController::class, 'create'])->middleware(new AuthMiddleware());
     // $api->get('/sejarah', [SejarahController::class, 'list']);
     // $api->get('/sejarah/{id}', [SejarahController::class, 'get']);
-    // $api->put('/sejarah/{id}', [SejarahController::class, 'update'])->middleware(new AuthMiddleware());
+    // $api->post('/sejarah/{id}', [SejarahController::class, 'update'])->middleware(new AuthMiddleware());
     // $api->delete('/sejarah/{id}', [SejarahController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/struktur-organisasi', [StrukturOrganisasiController::class, 'create'])->middleware(new AuthMiddleware());
@@ -122,7 +122,7 @@ return function (Router $r) {
     $api->post('/media-social', [MediaSocialController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/media-social', [MediaSocialController::class, 'list']);
     $api->get('/media-social/{id}', [MediaSocialController::class, 'get']);
-    $api->put('/media-social/{id}', [MediaSocialController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/media-social/{id}', [MediaSocialController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/media-social/{id}', [MediaSocialController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/mitra-partner', [MitraPartnerController::class, 'create'])->middleware(new AuthMiddleware());
@@ -134,13 +134,13 @@ return function (Router $r) {
     $api->post('/footer-section', [FooterSectionController::class, 'create']);
     $api->get('/footer-section', [FooterSectionController::class, 'list']);
     $api->get('/footer-section/{id}', [FooterSectionController::class, 'get']);
-    $api->put('/footer-section/{id}', [FooterSectionController::class, 'update']);
+    $api->post('/footer-section/{id}', [FooterSectionController::class, 'update']);
     $api->delete('/footer-section/{id}', [FooterSectionController::class, 'delete']);
 
     $api->post('/footer-item', [FooterItemController::class, 'create']);
     $api->get('/footer-item', [FooterItemController::class, 'list']);
     $api->get('/footer-item/{id}', [FooterItemController::class, 'get']);
-    $api->put('/footer-item/{id}', [FooterItemController::class, 'update']);
+    $api->post('/footer-item/{id}', [FooterItemController::class, 'update']);
     $api->delete('/footer-item/{id}', [FooterItemController::class, 'delete']);
 
     $api->post('/carousel', [CarouselController::class, 'create'])->middleware(new AuthMiddleware());
@@ -164,7 +164,7 @@ return function (Router $r) {
     $api->post('/comments', [CommentController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/comments', [CommentController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/comments/{id}', [CommentController::class, 'get'])->middleware(new AuthMiddleware());
-    $api->put('/comments/{id}', [CommentController::class, 'update'])->middleware(new AuthMiddleware());
+    $api->post('/comments/{id}', [CommentController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/comments/{id}', [CommentController::class, 'delete'])->middleware(new AuthMiddleware());
 
     // PUBLIC
