@@ -63,7 +63,7 @@ return function (Router $r) {
     $api->post('/media', [MediaAssetController::class, 'upload'])->middleware(new AuthMiddleware());
     $api->get('/media', [MediaAssetController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/media/{id}', [MediaAssetController::class, 'detail'])->middleware(new AuthMiddleware());
-    $api->put('/media/{id}', [MediaAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
+    $api->post('/media/{id}', [MediaAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media/{id}', [MediaAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/project', [ProjectController::class, 'create'])->middleware(new AuthMiddleware());
