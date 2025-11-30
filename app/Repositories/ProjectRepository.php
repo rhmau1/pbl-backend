@@ -73,10 +73,19 @@ final class ProjectRepository
         return $st->execute($params);
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id): array
     {
-        $st = $this->db->prepare('DELETE FROM projects WHERE id=:id');
-        return $st->execute(['id' => $id]);
+        try {
+            $st = $this->db->prepare('CALL delete_project(:id)');
+            $st->execute(['id' => $id]);
+
+            return [true, $id];
+        } catch (\PDOException $e) {
+            return [
+                false,
+                $e->getMessage()
+            ];
+        }
     }
 
     public function syncTags(int $projectId, array $tags): void

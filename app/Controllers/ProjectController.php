@@ -113,11 +113,11 @@ final class ProjectController extends Controller
                 404
             );
         }
-        $ok = $this->svc->delete($id);
+        [$ok, $msg] = $this->svc->delete($id);
 
         if (!$ok) {
             return $res->json(
-                ResponseFormatter::error('Cannot delete', 400),
+                ResponseFormatter::error($msg, 400),
                 400
             );
         }
