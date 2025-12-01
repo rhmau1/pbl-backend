@@ -23,8 +23,12 @@ final class NewsRepository
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($r) => [
             ...$r,
-            'attachments' => json_decode($r['attachments'], associative: true),
-            'tags' => json_decode($r['tags'], true),
+            'attachments' => !empty($r['attachments'])
+                ? json_decode($r['attachments'], true)
+                : [],
+            'tags' => !empty($r['tags'])
+                ? json_decode($r['tags'], true)
+                : [],
         ], $rows);
     }
 

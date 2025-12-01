@@ -23,8 +23,12 @@ final class ProjectRepository
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($r) => [
             ...$r,
-            'technologies' => json_decode($r['technologies'], true),
-            'tags' => json_decode($r['tags'], true),
+            'technologies' => !empty($r['technologies'])
+                ? json_decode($r['technologies'], true)
+                : [],
+            'tags' => !empty($r['tags'])
+                ? json_decode($r['tags'], true)
+                : [],
         ], $rows);
     }
 
