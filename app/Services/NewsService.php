@@ -121,10 +121,9 @@ final class NewsService
         return $ok;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id): array
     {
-        if (!$this->repo->findById($id)) return false;
-
+        if (!$this->repo->findById($id)) return [false, 'project not found'];
         return $this->repo->delete($id);
     }
 }

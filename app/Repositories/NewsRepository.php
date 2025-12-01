@@ -73,10 +73,19 @@ final class NewsRepository
         return $st->execute($params);
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id): array
     {
-        $st = $this->db->prepare('DELETE FROM news WHERE id=:id');
-        return $st->execute(['id' => $id]);
+        try {
+            $st = $this->db->prepare('CALL delete_news(:id)');
+            $st->execute(['id' => $id]);
+
+            return [true, $id];
+        } catch (\PDOException $e) {
+            return [
+                false,
+                $e->getMessage()
+            ];
+        }
     }
 
     public function syncTags(int $newsId, array $tags): void
