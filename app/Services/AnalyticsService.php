@@ -62,6 +62,18 @@ final class AnalyticsService
         return $this->repo->getRecentNewsActivities($limit);
     }
 
+    public function getProjectPublicationPercentage(): float
+    {
+        $published = $this->repo->countPublishedProjects();
+        $total = $this->repo->countTotalProjects();
+
+        if ($total === 0) {
+            return 0.0;
+        }
+
+        return round(($published / $total) * 100, 2);
+    }
+
     public function getProjectAndNewsCountsByMonth(): array
     {
         return $this->repo->getProjectAndNewsCountsByMonth();

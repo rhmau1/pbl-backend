@@ -117,6 +117,16 @@ final class AnalyticsController extends Controller
         );
     }
 
+    public function getProjectPublicationPercentage(Request $req, Response $res): Response
+    {
+        $percentage = $this->svc->getProjectPublicationPercentage();
+
+        return $res->json(
+            ResponseFormatter::success('Success', $percentage, 200),
+            200
+        );
+    }
+
     public function getProjectAndNewsCountsByMonth(Request $req, Response $res): Response
     {
         $data = $this->svc->getProjectAndNewsCountsByMonth();

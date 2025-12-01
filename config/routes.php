@@ -91,6 +91,7 @@ return function (Router $r) {
     $api->get('/analytics/news/published', [AnalyticsController::class, 'countPublishedNews']);
     $api->get('/analytics/traffic/likes', [AnalyticsController::class, 'getTotalLikes']);
     $api->get('/analytics/traffic/views', [AnalyticsController::class, 'getTotalViews']);
+    $api->get('/analytics/traffic/percentage', [AnalyticsController::class, 'getProjectPublicationPercentage']);
     $api->get('/analytics/activities/projects', [AnalyticsController::class, 'getRecentProjectActivities']);
     $api->get('/analytics/activities/news', [AnalyticsController::class, 'getRecentNewsActivities']);
     $api->get('/analytics/project-news-counts-by-month', [AnalyticsController::class, 'getProjectAndNewsCountsByMonth']);
