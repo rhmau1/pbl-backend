@@ -20,8 +20,9 @@ final class ProjectController extends Controller
     {
         $page = (int) ($req->query['page'] ?? 1);
         $limit = (int) ($req->query['limit'] ?? 20);
+        $status = $req->query['status'] ?? null;
 
-        [$items, $meta] = $this->svc->paginate($page, $limit);
+        [$items, $meta] = $this->svc->paginate($page, $limit, $status);
 
         return $res->json(
             ResponseFormatter::success('Success', ['items' => $items, 'meta' => $meta], 200),

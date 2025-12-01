@@ -22,14 +22,14 @@ final class ProjectService
         $this->tagRepo ??= new TagRepository();
     }
 
-    public function paginate(int $page, int $limit): array
+    public function paginate(int $page, int $limit, ?string $status = null): array
     {
         $page = max(1, $page);
         $limit = min(100, max(1, $limit));
         $offset = ($page - 1) * $limit;
 
-        $data = $this->repo->list($limit, $offset);
-        $total = $this->repo->count();
+        $data = $this->repo->list($limit, $offset, $status);
+        $total = $this->repo->count($status);
 
         return [
             array_map(fn($p) => is_object($p) ? (array) $p : $p, $data),

@@ -14,11 +14,22 @@ final class ProjectRepository
         $this->db = Database::pdo();
     }
 
-    public function list(int $limit, int $offset): array
+    public function list(int $limit, int $offset, ?string $status = null): array
     {
-        $st = $this->db->prepare('SELECT * FROM projects_view ORDER BY created_at DESC LIMIT :l OFFSET :o');
+        $query = 'SELECT * FROM projects_view';
+        $where = '';
+        $params = [];
+        if ($status) {
+            $where = 'WHERE status = :status';
+            $params[':status'] = $status;
+        }
+        $query .= " $where ORDER BY created_at DESC LIMIT :l OFFSET :o";
+        $st = $this->db->prepare($query);
         $st->bindValue(':l', $limit, PDO::PARAM_INT);
         $st->bindValue(':o', $offset, PDO::PARAM_INT);
+        if ($status) {
+            $st->bindValue(':status', $status);
+        }
         $st->execute();
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($r) => [
@@ -32,8 +43,13 @@ final class ProjectRepository
         ], $rows);
     }
 
-    public function count(): int
+    public function count(?string $status = null): int
     {
+        if ($status) {
+            $st = $this->db->prepare('SELECT COUNT(*) FROM projects_view WHERE status = :status');
+            $st->execute([':status' => $status]);
+            return (int) $st->fetchColumn();
+        }
         return (int) $this->db->query('SELECT COUNT(*) FROM projects_view')->fetchColumn();
     }
     public function countPublished(): int
