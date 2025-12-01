@@ -5,6 +5,9 @@ declare(strict_types=1);
 if (preg_match('/^\/uploads\/.+/', $_SERVER['REQUEST_URI'])) {
   return false; // biarkan file langsung serve
 }
+if (preg_match('/^\/3D\/.+/', $_SERVER['REQUEST_URI'])) {
+  return false; // biarkan file langsung serve
+}
 if (preg_match('/^\/avatars\/.+/', $_SERVER['REQUEST_URI'])) {
   return false; // biarkan file langsung serve
 }

@@ -24,6 +24,7 @@ use App\Controllers\ProjectMemberController;
 use App\Controllers\TimKreatifController;
 use App\Controllers\AnalyticsController;
 use App\Controllers\CommentController;
+use App\Controllers\Media3DAssetController;
 
 return function (Router $r) {
   $r->get('/ping', fn($req, $res) => $res->json(['pong' => true]));
@@ -65,6 +66,12 @@ return function (Router $r) {
     $api->get('/media/{id}', [MediaAssetController::class, 'detail'])->middleware(new AuthMiddleware());
     $api->post('/media/{id}', [MediaAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media/{id}', [MediaAssetController::class, 'delete'])->middleware(new AuthMiddleware());
+
+    $api->post('/media-3d', [Media3DAssetController::class, 'upload'])->middleware(new AuthMiddleware());
+    $api->get('/media-3d', [Media3DAssetController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail'])->middleware(new AuthMiddleware());
+    $api->post('/media-3d/{id}', [Media3DAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
+    $api->delete('/media-3d/{id}', [Media3DAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/project', [ProjectController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project', [ProjectController::class, 'list'])->middleware(new AuthMiddleware());
