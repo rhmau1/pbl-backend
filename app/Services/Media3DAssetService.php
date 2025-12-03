@@ -13,39 +13,15 @@ final class Media3DAssetService
         $this->repo ??= new Media3DAssetRepository();
     }
 
-    public function upload(array $file, string $visibility, ?int $owner, ?string $caption, ?string $alt): array
+    public function upload(string $url, string $visibility, ?int $owner, ?string $caption, ?string $alt): array
     {
-        $mime      = mime_content_type($file['tmp_name']);
-        $size      = filesize($file['tmp_name']);
-        $checksum  = md5_file($file['tmp_name']);
         $type      = "3D";
-
-        if ($type === 'unknown')
-            throw new Exception("Unsupported file type");
-
-        $exists = $this->repo->findByChecksum($checksum);
-        if ($exists)
-            return [true, ['reuse' => true, 'url' => $exists->url]];
-
-        $folder = "public/3D/";
-        if (!is_dir($folder)) {
-            if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
-                throw new Exception("Failed to create directory");
-            }
-        }
-        if (!is_uploaded_file($file["tmp_name"])) {
-            throw new Exception("Invalid uploaded file");
-        }
-
-        $filename = uniqid() . "_" . strtolower(str_replace(' ', '-', basename($file["name"])));
-        $path = $folder . $filename;
-
-        if (!move_uploaded_file($file["tmp_name"], $path))
-            throw new Exception("Failed saving file");
+        $checksum  = null; // No checksum for remote URLs
+        $size      = 0;    // Unknown size for remote URLs
 
         $id = $this->repo->create([
             ':type'    => $type,
-            ':url'     => $path,
+            ':url'     => $url,
             ':alt'     => $alt,
             ':caption' => $caption,
             ':bytes'   => $size,
@@ -53,15 +29,14 @@ final class Media3DAssetService
             ':owner'   => $owner,
             ':vis'     => $visibility,
         ]);
+
         if (!$id) {
-            if (file_exists($path)) {
-                unlink($path);
-            }
             return [false, null];
         }
+
         return [true, [
             'id'         => $id,
-            'url'        => $path,
+            'url'        => $url,
             'type'       => $type,
             'visibility' => $visibility
         ]];

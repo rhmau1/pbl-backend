@@ -21,11 +21,11 @@ final class Media3DAssetController extends Controller
     public function upload(Request $req, Response $res): Response
     {
         try {
-            $file = $_FILES['file'] ?? null;
+            $url = $req->json['url'] ?? $req->json['file'] ?? null;
 
-            if (!$file) {
+            if (!$url) {
                 return $res->json(
-                    ResponseFormatter::error("File is required", 400),
+                    ResponseFormatter::error("URL is required", 400),
                     400
                 );
             }
@@ -43,9 +43,9 @@ final class Media3DAssetController extends Controller
             }
             $owner      = $user['id'] ?? null;
 
-            Media3DAssetUploadRequest::validate($file, $visibility);
+            Media3DAssetUploadRequest::validate($url, $visibility);
 
-            [$ok, $data] = $this->svc->upload($file, $visibility, $owner, $caption, $alt);
+            [$ok, $data] = $this->svc->upload($url, $visibility, $owner, $caption, $alt);
 
             return $res->json(
                 ResponseFormatter::success("File uploaded", $data, 200),
