@@ -14,26 +14,27 @@ final class FooterItemRepository
         $this->db = Database::pdo();
     }
 
-    public function findById(int $id): ?FooterItem
+    public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM footer_items WHERE id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM footer_view WHERE id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        return $row ? $this->map($row) : null;
+        return $row ? $row : null;
     }
 
     public function list(int $limit, int $offset): array
     {
-        $st = $this->db->prepare('SELECT * FROM footer_items ORDER BY position LIMIT :l OFFSET :o');
+        $st = $this->db->prepare('SELECT * FROM footer_view ORDER BY position LIMIT :l OFFSET :o');
         $st->bindValue(':l', $limit, PDO::PARAM_INT);
         $st->bindValue(':o', $offset, PDO::PARAM_INT);
         $st->execute();
-        return array_map(fn($r) => $this->map($r), $st->fetchAll(PDO::FETCH_ASSOC));
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($r) => [...$r], $rows);
     }
 
     public function count(): int
     {
-        return (int) $this->db->query('SELECT COUNT(*) FROM footer_items')->fetchColumn();
+        return (int) $this->db->query('SELECT COUNT(*) FROM footer_view')->fetchColumn();
     }
 
     public function create(array $fields): int

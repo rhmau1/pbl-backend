@@ -60,13 +60,7 @@ final class FooterItemService
         if (!$u)
             return null;
 
-        return [
-            'id' => $u->id,
-            'section_id' => $u->section_id,
-            'label' => $u->label,
-            'content' => $u->content,
-            'position' => $u->position
-        ];
+        return $u;
     }
 
     public function update(int $id, array $payload): array
