@@ -44,17 +44,7 @@ final class NewsService
     public function get(int $id): ?array
     {
         $p = $this->repo->findById($id);
-        if (!$p)
-            return null;
-        $media = null;
-
-        if (!empty($p->cover_asset_id)) {
-            $media = $this->media->findById($p->cover_asset_id);
-        }
-        return [
-            ...((array) $p),
-            'cover_url' => $media ? $media->url : null,
-        ];
+        return $p ? (array) $p : null;
     }
 
     public function create(array $payload): int

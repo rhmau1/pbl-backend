@@ -57,13 +57,35 @@ final class ProjectRepository
         return (int) $this->db->query('SELECT COUNT(*) FROM projects WHERE published_at IS NOT NULL')->fetchColumn();
     }
 
-    public function findById(int $id): ?Project
+    public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM projects WHERE id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM projects_view WHERE id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        return $row ? $this->map($row) : null;
+
+        if (!$row) {
+            return null;
+        }
+
+        if (isset($row['technologies'])) {
+            if (is_string($row['technologies'])) {
+                $row['technologies'] = json_decode($row['technologies'], true) ?: [];
+            }
+        } else {
+            $row['technologies'] = [];
+        }
+
+        if (isset($row['tags'])) {
+            if (is_string($row['tags'])) {
+                $row['tags'] = json_decode($row['tags'], true) ?: [];
+            }
+        } else {
+            $row['tags'] = [];
+        }
+
+        return $row;
     }
+
 
     public function create(array $fields): int
     {

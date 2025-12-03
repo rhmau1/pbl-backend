@@ -37,12 +37,33 @@ final class NewsRepository
         return (int) $this->db->query('SELECT COUNT(*) FROM news_view')->fetchColumn();
     }
 
-    public function findById(int $id): ?News
+    public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM news WHERE id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM news_view WHERE id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        return $row ? $this->map($row) : null;
+
+        if (!$row) {
+            return null;
+        }
+
+        if (isset($row['attachments'])) {
+            if (is_string($row['attachments'])) {
+                $row['attachments'] = json_decode($row['attachments'], true) ?: [];
+            }
+        } else {
+            $row['attachments'] = [];
+        }
+
+        if (isset($row['tags'])) {
+            if (is_string($row['tags'])) {
+                $row['tags'] = json_decode($row['tags'], true) ?: [];
+            }
+        } else {
+            $row['tags'] = [];
+        }
+
+        return $row;
     }
 
     public function create(array $fields): int
