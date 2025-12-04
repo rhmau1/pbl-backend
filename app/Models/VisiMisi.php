@@ -9,6 +9,7 @@ final class VisiMisi
         public string $type,
         public string $content,
         public int $position,
-        public string $updated_at
+        public string $updated_at,
+        public int $is_active
     ) {}
 }
