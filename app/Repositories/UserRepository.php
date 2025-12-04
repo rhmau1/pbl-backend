@@ -47,12 +47,31 @@ final class UserRepository
         return $st->execute($params);
     }
 
-    public function findById(int $id): ?User
+    public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM users_view WHERE id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        return $row ? $this->map($row) : null;
+        if (!$row) {
+            return null;
+        }
+
+        if (isset($row['skills'])) {
+            if (is_string($row['skills'])) {
+                $row['skills'] = json_decode($row['skills'], true) ?: [];
+            }
+        } else {
+            $row['skills'] = [];
+        }
+
+        if (isset($row['socials'])) {
+            if (is_string($row['socials'])) {
+                $row['socials'] = json_decode($row['socials'], true) ?: [];
+            }
+        } else {
+            $row['socials'] = [];
+        }
+        return $row;
     }
 
     public function list(int $limit, int $offset): array

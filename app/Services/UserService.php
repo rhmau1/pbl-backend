@@ -45,18 +45,9 @@ final class UserService
         $u = $this->repo->findById($id);
         if (!$u)
             return null;
-        $role = $this->roleRepo->findById($u->role_id);
+        unset($u['passwordHash'], $u['password_hash']);
 
-        return [
-            'id' => $u->id,
-            'email' => $u->email,
-            'name' => $u->name,
-            'role_id' => $u->role_id,
-            'role_name' => $role ? $role->name : null,
-            'created_at' => $u->created_at,
-            'updated_at' => $u->updated_at ?? null,
-            'avatar' => $u->avatar,
-        ];
+        return (array)$u;
     }
 
     public function update(int $id, array $payload): bool

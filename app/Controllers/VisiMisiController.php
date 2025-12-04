@@ -89,7 +89,7 @@ final class VisiMisiController extends Controller
             );
         }
 
-        [$ok, $out] = $this->svc->create($payload['content'], $payload['type'], $payload['position']);
+        [$ok, $out] = $this->svc->create($payload['content'], $payload['type'], $payload['position'], $payload['is_active']);
         if (!$ok) {
             return $res->json(
                 ResponseFormatter::error($out, 400),
@@ -101,7 +101,8 @@ final class VisiMisiController extends Controller
             'id'    => $out['id'],
             'content'  => $out['content'],
             'type'  => $out['type'],
-            'position'  => $out['position']
+            'position'  => $out['position'],
+            'is_active'  => $out['is_active'],
         ];
 
         return $res->json(

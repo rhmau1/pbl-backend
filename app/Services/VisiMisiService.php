@@ -37,12 +37,16 @@ final class VisiMisiService
         ];
     }
 
-    public function create(string $content, string $type, int $position): array
+    public function create(string $content, string $type, int $position, int $is_active): array
     {
-        $id = $this->repo->create($content, $type, $position);
+        $id = $this->repo->create($content, $type, $position, $is_active);
 
         if (!$id) {
             return [false, null];
+        }
+
+        if ($is_active == 1) {
+            $this->repo->deactivateOthersByType($type, $id);
         }
 
         return [
@@ -51,7 +55,8 @@ final class VisiMisiService
                 'id'    => $id,
                 'content'  => $content,
                 'type'  => $type,
-                'position' => $position
+                'position' => $position,
+                'is_active' => $is_active,
             ]
         ];
     }
@@ -66,6 +71,7 @@ final class VisiMisiService
             'content' => $u->content,
             'type' => $u->type,
             'position' => $u->position,
+            'is_active' => $u->is_active,
         ];
     }
 
@@ -74,6 +80,12 @@ final class VisiMisiService
         $u = $this->repo->findById($id);
         if (!$u)
             return false;
+
+        if (isset($payload['is_active']) && $payload['is_active'] == 1) {
+            $type = $payload['type'] ?? $u->type;
+            $this->repo->deactivateOthersByType($type, $id);
+        }
+
         return $this->repo->update($id, $payload);
     }
 

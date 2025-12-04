@@ -69,13 +69,13 @@ final class AuthService
                     'name' => $u->name,
                     'role_id' => $u->role_id,
                     'last_login_at' => $u->last_login_at,
-                    'avatar' => $u ->avatar
+                    'avatar' => $u->avatar
                 ],
             ],
         ];
     }
 
-    public function register(string $email, string $name, string $password, string $roleId): array
+    public function register(string $email, string $name, string $password, int $roleId): array
     {
         if ($this->repo->findByEmail($email))
             return [false, 'Email already registered'];

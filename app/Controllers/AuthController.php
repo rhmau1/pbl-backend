@@ -23,12 +23,11 @@ final class AuthController extends Controller
         $email = (string)($req->json['email'] ?? '');
         $name  = (string)($req->json['name'] ?? '');
         $pass  = (string)($req->json['password'] ?? '');
-        $role  = (string)($req->json['role'] ?? '');
+        $role  = ($req->json['role'] ?? 1);
 
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Invalid email';
         if ($name === '')                               $errors['name']  = 'Name required';
-        if ($role === '')                               $errors['role']  = 'role required';
         if (strlen($pass) < 6)                          $errors['password'] = 'Min 6 chars';
 
         if ($errors) {

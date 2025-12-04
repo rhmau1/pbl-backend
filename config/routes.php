@@ -81,7 +81,7 @@ return function (Router $r) {
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/project-members', [ProjectMemberController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project-members', [ProjectMemberController::class, 'list']);
-    $api->get('/project-members/{id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->get('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
 

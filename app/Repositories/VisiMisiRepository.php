@@ -36,10 +36,10 @@ final class VisiMisiRepository
         return (int) $this->db->query('SELECT COUNT(*) FROM visi_misi')->fetchColumn();
     }
 
-    public function create(string $content, string $type, int $position): int
+    public function create(string $content, string $type, int $position, int $is_active): int
     {
-        $st = $this->db->prepare('INSERT INTO visi_misi(content,position,type) VALUES(:c,:p,:t) RETURNING id');
-        $st->execute(['c' => $content, 'p' => $position, 't' => $type]);
+        $st = $this->db->prepare('INSERT INTO visi_misi(content,position,type, is_active) VALUES(:c,:p,:t, :i) RETURNING id');
+        $st->execute(['c' => $content, 'p' => $position, 't' => $type, 'i' => $is_active]);
         return (int) $st->fetchColumn();
     }
 
@@ -65,6 +65,12 @@ final class VisiMisiRepository
         return $st->execute(['id' => $id]);
     }
 
+    public function deactivateOthersByType(string $type, int $excludeId): bool
+    {
+        $st = $this->db->prepare('UPDATE visi_misi SET is_active = 0 WHERE type = :type AND id != :excludeId AND is_active = 1');
+        return $st->execute(['type' => $type, 'excludeId' => $excludeId]);
+    }
+
     private function map(array $r): VisiMisi
     {
         return new VisiMisi(
@@ -72,7 +78,8 @@ final class VisiMisiRepository
             $r['type'],
             $r['content'],
             $r['position'],
-            $r['updated_at']
+            $r['updated_at'],
+            $r['is_active']
         );
     }
 }

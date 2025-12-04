@@ -121,6 +121,24 @@ final class ProjectMemberController extends Controller
         );
     }
 
+    public function get(Request $req, Response $res, array $params): Response
+    {
+        $pid = (int) ($params['project_id'] ?? 0);
+        $mid = (int) ($params['member_id'] ?? 0);
+        $ok = $this->svc->get($pid, $mid);
+
+        if (!$ok) {
+            return $res->json(
+                ResponseFormatter::error('Cannot get', 400),
+                400
+            );
+        }
+
+        return $res->json(
+            ResponseFormatter::success('success', $ok, 200),
+            200
+        );
+    }
     public function delete(Request $req, Response $res, array $params): Response
     {
         $pid = (int) ($params['project_id'] ?? 0);
