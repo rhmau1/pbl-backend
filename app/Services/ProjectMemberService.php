@@ -59,6 +59,15 @@ final class ProjectMemberService
         ];
     }
 
+    public function get(int $pid, int $mid): ?array
+    {
+        $p = $this->repo->get($pid, $mid);
+        if (!$p) {
+            return null;
+        }
+
+        return (array) $p;
+    }
     public function delete(int $pid, int $mid): bool
     {
         return $this->repo->delete($pid, $mid);

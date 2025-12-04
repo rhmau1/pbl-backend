@@ -84,6 +84,32 @@ final class ProjectMemberRepository
         ]);
     }
 
+    public function get(int $pid, int $mid): ?array
+    {
+        $st = $this->db->prepare('SELECT * FROM project_members_view WHERE project_id=:pid AND member_id = :mid');
+        $st->execute(['pid' => $pid, 'mid' => $mid]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        if (isset($row['skills'])) {
+            if (is_string($row['skills'])) {
+                $row['skills'] = json_decode($row['skills'], true) ?: [];
+            }
+        } else {
+            $row['skills'] = [];
+        }
+
+        if (isset($row['socials'])) {
+            if (is_string($row['socials'])) {
+                $row['socials'] = json_decode($row['socials'], true) ?: [];
+            }
+        } else {
+            $row['socials'] = [];
+        }
+        return $row;
+    }
     public function delete(int $pid, int $mid): bool
     {
         $st = $this->db->prepare('DELETE FROM project_members WHERE project_id=:pid AND member_id = :mid');
