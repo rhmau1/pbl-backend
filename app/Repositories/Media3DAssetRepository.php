@@ -18,7 +18,7 @@ final class Media3DAssetRepository
     public function create(array $data): int
     {
         $st = $this->db->prepare("
-            INSERT INTO media_3d_views(type, url, alt_text, caption, bytes, checksum, owner_id, visibility)
+            INSERT INTO media_assets(type, url, alt_text, caption, bytes, checksum, owner_id, visibility)
             VALUES(:type, :url, :alt, :caption, :bytes, :checksum, :owner, :vis)
             RETURNING id
         ");
@@ -29,7 +29,7 @@ final class Media3DAssetRepository
 
     public function findByChecksum(string $checksum): ?MediaAsset
     {
-        $st = $this->db->prepare("SELECT * FROM media_3d_views WHERE checksum = :c LIMIT 1");
+        $st = $this->db->prepare("SELECT * FROM media_assets WHERE checksum = :c LIMIT 1");
         $st->execute(['c' => $checksum]);
 
         $row = $st->fetch(PDO::FETCH_ASSOC);
@@ -37,14 +37,14 @@ final class Media3DAssetRepository
     }
     public function findById(int $id): ?MediaAsset
     {
-        $st = $this->db->prepare("SELECT * FROM media_3d_views WHERE id = :id");
+        $st = $this->db->prepare("SELECT * FROM media_assets WHERE id = :id");
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->map($row) : null;
     }
     public function exists(int $id): bool
     {
-        $st = $this->db->prepare("SELECT * FROM media_3d_views WHERE id = :id");
+        $st = $this->db->prepare("SELECT * FROM media_assets WHERE id = :id");
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
         return $row ? true : false;
@@ -52,7 +52,7 @@ final class Media3DAssetRepository
 
     public function filter(int $limit, int $offset, ?int $visibility, ?int $owner): array
     {
-        $sql = "SELECT * FROM media_3d_views WHERE 1=1";
+        $sql = "SELECT * FROM media_assets WHERE 1=1 AND type = '3D'";
         $params = [];
 
         if ($visibility) {
@@ -80,19 +80,19 @@ final class Media3DAssetRepository
 
     public function delete(int $id): bool
     {
-        $st = $this->db->prepare("DELETE FROM media_3d_views WHERE id = :id");
+        $st = $this->db->prepare("DELETE FROM media_assets WHERE id = :id");
         return $st->execute(['id' => $id]);
     }
 
     public function updateVisibility(int $id, int $visibility): bool
     {
-        $st = $this->db->prepare("UPDATE media_3d_views SET visibility = :v WHERE id = :id");
+        $st = $this->db->prepare("UPDATE media_assets SET visibility = :v WHERE id = :id");
         return $st->execute(['v' => $visibility, 'id' => $id]);
     }
 
     public function updateMetadata(int $id, ?string $alt, ?string $caption): bool
     {
-        $st = $this->db->prepare("UPDATE media_3d_views SET alt_text = :a, caption = :c WHERE id = :id");
+        $st = $this->db->prepare("UPDATE media_assets SET alt_text = :a, caption = :c WHERE id = :id");
         return $st->execute(['a' => $alt, 'c' => $caption, 'id' => $id]);
     }
 
