@@ -31,6 +31,21 @@ final class ProjectMemberRepository
                 : [],
         ], $rows);
     }
+    public function getByProject(int $projectId): array
+    {
+        $st = $this->db->prepare('SELECT * FROM project_members_view WHERE project_id = :p');
+        $st->execute(['p' => $projectId]);
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($r) => [
+            ...$r,
+            'skills' => !empty($r['skills'])
+                ? json_decode($r['skills'], true)
+                : [],
+            'socials' => !empty($r['socials'])
+                ? json_decode($r['socials'], true)
+                : [],
+        ], $rows);
+    }
 
     public function count(): int
     {
