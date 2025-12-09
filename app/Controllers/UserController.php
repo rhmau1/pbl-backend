@@ -78,6 +78,7 @@ final class UserController extends Controller
     public function updateProfile(Request $req, Response $res, array $params): Response
     {
         $user = $req->getAttribute('user', null);
+        $id = (int) ($params['id'] ?? 0);
 
         if (!$user || empty($user['id'])) {
             return $res->json(
@@ -94,7 +95,7 @@ final class UserController extends Controller
             );
         }
 
-        [$ok, $msg] = $this->svc->updateProfile($user['id'], $payload);
+        [$ok, $msg] = $this->svc->updateProfile($id, $payload);
         if (!$ok) {
             return $res->json(
                 ResponseFormatter::error($msg, 400),

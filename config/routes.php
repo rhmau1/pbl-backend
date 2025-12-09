@@ -39,7 +39,7 @@ return function (Router $r) {
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
-    $api->post('/users/profile', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
+    $api->post('/users/profile/{id}', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
 
