@@ -69,8 +69,8 @@ return function (Router $r) {
     $api->delete('/media/{id}', [MediaAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/media-3d', [Media3DAssetController::class, 'upload'])->middleware(new AuthMiddleware());
-    $api->get('/media-3d', [Media3DAssetController::class, 'list'])->middleware(new AuthMiddleware());
-    $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail'])->middleware(new AuthMiddleware());
+    $api->get('/media-3d', [Media3DAssetController::class, 'list']);
+    $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail']);
     $api->post('/media-3d/{id}', [Media3DAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media-3d/{id}', [Media3DAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
