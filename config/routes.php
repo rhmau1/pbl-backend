@@ -36,6 +36,7 @@ return function (Router $r) {
     $api->post('/register', [AuthController::class, 'register']);
     $api->get('/validate-token', [AuthController::class, 'validateToken'])->middleware(new AuthMiddleware());
 
+    $api->post('/users', [AuthController::class, 'register'])->middleware(new AuthMiddleware());
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
