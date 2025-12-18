@@ -36,10 +36,11 @@ return function (Router $r) {
     $api->post('/register', [AuthController::class, 'register']);
     $api->get('/validate-token', [AuthController::class, 'validateToken'])->middleware(new AuthMiddleware());
 
+    $api->post('/users', [AuthController::class, 'register'])->middleware(new AuthMiddleware());
     $api->get('/users', [UserController::class, 'list'])->middleware(new AuthMiddleware());
     $api->get('/users/{id}', [UserController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/users/{id}', [UserController::class, 'update'])->middleware(new AuthMiddleware());
-    $api->post('/users/profile', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
+    $api->post('/users/profile/{id}', [UserController::class, 'updateProfile'])->middleware(new AuthMiddleware());
     $api->delete('/users/{id}', [UserController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/logout', [UserController::class, 'logout'])->middleware(new AuthMiddleware());
 
@@ -69,7 +70,8 @@ return function (Router $r) {
 
     $api->post('/media-3d', [Media3DAssetController::class, 'upload']);
     $api->get('/media-3d', [Media3DAssetController::class, 'list']);
-    $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail'])->middleware(new AuthMiddleware());
+    $api->get('/media-3d', [Media3DAssetController::class, 'list']);
+    $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail']);
     $api->post('/media-3d/{id}', [Media3DAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media-3d/{id}', [Media3DAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
