@@ -39,7 +39,7 @@ final class NewsRepository
 
     public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM news_view WHERE id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM news_view WHERE news_id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
 

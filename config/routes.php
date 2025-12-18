@@ -67,8 +67,8 @@ return function (Router $r) {
     $api->post('/media/{id}', [MediaAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media/{id}', [MediaAssetController::class, 'delete'])->middleware(new AuthMiddleware());
 
-    $api->post('/media-3d', [Media3DAssetController::class, 'upload'])->middleware(new AuthMiddleware());
-    $api->get('/media-3d', [Media3DAssetController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->post('/media-3d', [Media3DAssetController::class, 'upload']);
+    $api->get('/media-3d', [Media3DAssetController::class, 'list']);
     $api->get('/media-3d/{id}', [Media3DAssetController::class, 'detail'])->middleware(new AuthMiddleware());
     $api->post('/media-3d/{id}', [Media3DAssetController::class, 'updateVisibility'])->middleware(new AuthMiddleware());
     $api->delete('/media-3d/{id}', [Media3DAssetController::class, 'delete'])->middleware(new AuthMiddleware());
@@ -81,7 +81,7 @@ return function (Router $r) {
     $api->delete('/project/{id}', [ProjectController::class, 'delete'])->middleware(new AuthMiddleware());
     $api->post('/project-members', [ProjectMemberController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/project-members', [ProjectMemberController::class, 'list']);
-    $api->get('/project-members/{project_id}', [ProjectMemberController::class, 'getByProject'])->middleware(new AuthMiddleware());
+    $api->get('/project-members/{project_id}', [ProjectMemberController::class, 'getByProject']);
     $api->get('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/project-members', [ProjectMemberController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/project-members/{project_id}/{member_id}', [ProjectMemberController::class, 'delete'])->middleware(new AuthMiddleware());
@@ -106,7 +106,7 @@ return function (Router $r) {
 
     $api->post('/news', [NewsController::class, 'create'])->middleware(new AuthMiddleware());
     $api->get('/news', [NewsController::class, 'list'])->middleware(new AuthMiddleware());
-    $api->get('/news/{id}', [NewsController::class, 'get'])->middleware(new AuthMiddleware());
+    $api->get('/news/{id}', [NewsController::class, 'get']);
     $api->post('/news/{id}', [NewsController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/news/{id}', [NewsController::class, 'delete'])->middleware(new AuthMiddleware());
 
@@ -159,7 +159,7 @@ return function (Router $r) {
     $api->delete('/carousel/{id}', [CarouselController::class, 'delete'])->middleware(new AuthMiddleware());
 
     $api->post('/navbar-logo', [NavbarLogoController::class, 'create'])->middleware(new AuthMiddleware());
-    $api->get('/navbar-logo', [NavbarLogoController::class, 'list'])->middleware(new AuthMiddleware());
+    $api->get('/navbar-logo', [NavbarLogoController::class, 'list']);
     $api->get('/navbar-logo/{id}', [NavbarLogoController::class, 'get'])->middleware(new AuthMiddleware());
     $api->post('/navbar-logo/{id}', [NavbarLogoController::class, 'update'])->middleware(new AuthMiddleware());
     $api->delete('/navbar-logo/{id}', [NavbarLogoController::class, 'delete'])->middleware(new AuthMiddleware());
