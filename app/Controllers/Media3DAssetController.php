@@ -33,19 +33,19 @@ final class Media3DAssetController extends Controller
             $visibility = $req->json['visibility'] ?? 1;
             $caption    = $req->json['caption'] ?? null;
             $alt        = $req->json['alt_text'] ?? null;
-            $user = $req->getAttribute('user', null);
+            // $user = $req->getAttribute('user', null);
 
-            if (!$user || empty($user['id'])) {
-                return $res->json(
-                    ResponseFormatter::error('Invalid user', 401),
-                    401
-                );
-            }
-            $owner      = $user['id'] ?? null;
+            // if (!$user || empty($user['id'])) {
+            //     return $res->json(
+            //         ResponseFormatter::error('Invalid user', 401),
+            //         401
+            //     );
+            // }
+            // $owner      = $user['id'] ?? null;
 
             Media3DAssetUploadRequest::validate($url, $visibility);
 
-            [$ok, $data] = $this->svc->upload($url, $visibility, $owner, $caption, $alt);
+            [$ok, $data] = $this->svc->upload($url, $visibility, $caption, $alt);
 
             return $res->json(
                 ResponseFormatter::success("File uploaded", $data, 200),

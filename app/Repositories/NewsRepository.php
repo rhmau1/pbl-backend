@@ -39,7 +39,7 @@ final class NewsRepository
 
     public function findById(int $id): ?array
     {
-        $st = $this->db->prepare('SELECT * FROM news_view WHERE news_id = :id LIMIT 1');
+        $st = $this->db->prepare('SELECT * FROM news_view WHERE id = :id LIMIT 1');
         $st->execute(['id' => $id]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
 
@@ -75,6 +75,13 @@ final class NewsRepository
         $st  = $this->db->prepare($sql);
         $st->execute($fields);
         return (int)$st->fetchColumn();
+    }
+
+    public function refreshStats(): void
+    {
+        $this->db->exec(
+            "REFRESH MATERIALIZED VIEW CONCURRENTLY project_news_count_by_month_views"
+        );
     }
 
     public function update(int $id, array $fields): bool

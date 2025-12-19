@@ -75,6 +75,7 @@ final class NewsService
 
         // Upsert tags relations
         $this->repo->syncTags($id, $tags);
+        $this->repo->refreshStats();
 
         return $id;
     }
@@ -107,6 +108,7 @@ final class NewsService
         if ($tags !== null) {
             $this->repo->syncTags($id, $tags);
         }
+        $this->repo->refreshStats();
 
         return $ok;
     }
@@ -114,6 +116,8 @@ final class NewsService
     public function delete(int $id): array
     {
         if (!$this->repo->findById($id)) return [false, 'project not found'];
+        $this->repo->refreshStats();
+
         return $this->repo->delete($id);
     }
 }

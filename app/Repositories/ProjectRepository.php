@@ -98,6 +98,13 @@ final class ProjectRepository
         return (int)$st->fetchColumn();
     }
 
+    public function refreshStats(): void
+    {
+        $this->db->exec(
+            "REFRESH MATERIALIZED VIEW CONCURRENTLY project_news_count_by_month_views"
+        );
+    }
+
     public function update(int $id, array $fields): bool
     {
         $set = [];

@@ -18,8 +18,8 @@ final class Media3DAssetRepository
     public function create(array $data): int
     {
         $st = $this->db->prepare("
-            INSERT INTO media_assets(type, url, alt_text, caption, bytes, checksum, owner_id, visibility)
-            VALUES(:type, :url, :alt, :caption, :bytes, :checksum, :owner, :vis)
+            INSERT INTO media_assets(type, url, alt_text, caption, bytes, checksum, visibility)
+            VALUES(:type, :url, :alt, :caption, :bytes, :checksum, :vis)
             RETURNING id
         ");
 

@@ -13,7 +13,7 @@ final class Media3DAssetService
         $this->repo ??= new Media3DAssetRepository();
     }
 
-    public function upload(string $url, string $visibility, ?int $owner, ?string $caption, ?string $alt): array
+    public function upload(string $url, string $visibility, ?string $caption, ?string $alt): array
     {
         $type      = "3D";
         $checksum  = null; // No checksum for remote URLs
@@ -26,7 +26,6 @@ final class Media3DAssetService
             ':caption' => $caption,
             ':bytes'   => $size,
             ':checksum' => $checksum,
-            ':owner'   => $owner,
             ':vis'     => $visibility,
         ]);
 
